@@ -324,12 +324,15 @@ export default function Hero() {
       </span>
     ));
 
-  const renderWords = (text: string) =>
-    text.split(" ").map((word, i) => (
-      <span key={i} className="hero-word inline-block mr-[0.3em]">
-        {word}
+  const renderWords = (text: string) => {
+    const words = text.split(" ");
+    return words.map((word, i) => (
+      <span key={i}>
+        <span className="hero-word inline-block">{word}</span>
+        {i < words.length - 1 ? " " : ""}
       </span>
     ));
+  };
 
   return (
     <section
@@ -365,7 +368,7 @@ export default function Hero() {
           <br className="hidden sm:block" />
           {renderChars(headingLine2 + " ")}
           <span className="gradient-text text-glow">
-            {renderChars(headingHighlight, "gradient-text")}
+            {renderChars(headingHighlight)}
           </span>
           <br />
           <span

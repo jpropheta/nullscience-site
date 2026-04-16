@@ -23,106 +23,6 @@ interface FormErrors {
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
-function FloatingInput({
-  label,
-  name,
-  type = "text",
-  value,
-  error,
-  onChange,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  value: string;
-  error?: string;
-  onChange: (name: string, value: string) => void;
-}) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [focused, setFocused] = useState(false);
-  const isActive = focused || value.length > 0;
-
-  return (
-    <div className="relative text-left">
-      <label
-        className={`absolute left-4 transition-all duration-300 pointer-events-none font-mono tracking-wider uppercase ${
-          isActive
-            ? "top-1.5 text-[10px] text-accent"
-            : "top-3.5 text-xs text-muted"
-        }`}
-      >
-        {label}
-      </label>
-      <input
-        ref={inputRef}
-        type={type}
-        value={value}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        onChange={(e) => onChange(name, e.target.value)}
-        className={`w-full px-4 pt-5 pb-2 bg-background border rounded text-sm text-foreground focus:outline-none transition-all duration-300 ${
-          error
-            ? "border-red-500/60 focus:border-red-500"
-            : focused
-            ? "border-accent/60 shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-            : "border-border"
-        }`}
-      />
-      {error && (
-        <p className="text-xs text-red-400 mt-1 font-mono">{error}</p>
-      )}
-    </div>
-  );
-}
-
-function FloatingTextarea({
-  label,
-  name,
-  value,
-  error,
-  onChange,
-}: {
-  label: string;
-  name: string;
-  value: string;
-  error?: string;
-  onChange: (name: string, value: string) => void;
-}) {
-  const [focused, setFocused] = useState(false);
-  const isActive = focused || value.length > 0;
-
-  return (
-    <div className="relative text-left">
-      <label
-        className={`absolute left-4 transition-all duration-300 pointer-events-none font-mono tracking-wider uppercase ${
-          isActive
-            ? "top-1.5 text-[10px] text-accent"
-            : "top-3.5 text-xs text-muted"
-        }`}
-      >
-        {label}
-      </label>
-      <textarea
-        rows={4}
-        value={value}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        onChange={(e) => onChange(name, e.target.value)}
-        className={`w-full px-4 pt-5 pb-2 bg-background border rounded text-sm text-foreground focus:outline-none transition-all duration-300 resize-none ${
-          error
-            ? "border-red-500/60 focus:border-red-500"
-            : focused
-            ? "border-accent/60 shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-            : "border-border"
-        }`}
-      />
-      {error && (
-        <p className="text-xs text-red-400 mt-1 font-mono">{error}</p>
-      )}
-    </div>
-  );
-}
-
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -137,10 +37,14 @@ export default function Contact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<FormStatus>("idle");
 
-  const handleChange = useCallback((name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    },
+    []
+  );
 
   const validate = useCallback((): FormErrors => {
     const errs: FormErrors = {};
@@ -161,16 +65,11 @@ export default function Contact() {
       const errs = validate();
       if (Object.keys(errs).length > 0) {
         setErrors(errs);
-        // Shake the form on validation error
         if (formRef.current) {
           gsap.fromTo(
             formRef.current,
             { x: -8 },
-            {
-              x: 0,
-              duration: 0.4,
-              ease: "elastic.out(1, 0.3)",
-            }
+            { x: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" }
           );
         }
         return;
@@ -178,7 +77,6 @@ export default function Contact() {
 
       setStatus("submitting");
 
-      // Build mailto fallback
       const subject = encodeURIComponent(
         `Contato Nullscience — ${formData.empresa}`
       );
@@ -186,27 +84,18 @@ export default function Contact() {
         `Nome: ${formData.nome}\nEmpresa: ${formData.empresa}\nE-mail: ${formData.email}\n\nMensagem:\n${formData.mensagem}`
       );
 
-      // Simulate brief delay for UX, then open mailto
       await new Promise((r) => setTimeout(r, 800));
-
       window.location.href = `mailto:contato@nullscience.ai?subject=${subject}&body=${body}`;
-
       setStatus("success");
 
-      // Success animation
       if (btnRef.current) {
         gsap.fromTo(
           btnRef.current,
           { scale: 0.95 },
-          {
-            scale: 1,
-            duration: 0.5,
-            ease: "elastic.out(1, 0.4)",
-          }
+          { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.4)" }
         );
       }
 
-      // Reset after delay
       setTimeout(() => {
         setStatus("idle");
         setFormData({ nome: "", empresa: "", email: "", mensagem: "" });
@@ -215,7 +104,6 @@ export default function Contact() {
     [formData, validate]
   );
 
-  // Magnetic button
   const handleBtnMove = useCallback((e: React.MouseEvent) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const btn = btnRef.current;
@@ -244,7 +132,6 @@ export default function Contact() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Tag badge
       gsap.fromTo(
         ".contact-tag",
         { opacity: 0, scale: 0.9, y: 20 },
@@ -258,7 +145,6 @@ export default function Contact() {
         }
       );
 
-      // Heading clip
       gsap.fromTo(
         ".contact-heading",
         { clipPath: "inset(100% 0 0 0)", y: 40 },
@@ -271,7 +157,6 @@ export default function Contact() {
         }
       );
 
-      // Description
       gsap.fromTo(
         ".contact-desc",
         { opacity: 0, y: 30 },
@@ -284,7 +169,6 @@ export default function Contact() {
         }
       );
 
-      // Form card rises up
       gsap.fromTo(
         ".contact-form",
         { opacity: 0, y: 60, clipPath: "inset(0 0 100% 0)" },
@@ -298,7 +182,6 @@ export default function Contact() {
         }
       );
 
-      // Alt contact
       gsap.fromTo(
         ".contact-alt",
         { opacity: 0, y: 15 },
@@ -311,7 +194,6 @@ export default function Contact() {
         }
       );
 
-      // Background glow responds to scroll
       gsap.fromTo(
         ".contact-glow",
         { scale: 0.6, opacity: 0.3 },
@@ -333,11 +215,9 @@ export default function Contact() {
 
   return (
     <section ref={sectionRef} id="contato" className="relative py-32 px-6">
-      {/* Background glow */}
       <div className="contact-glow absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-accent/5 blur-[150px] pointer-events-none" />
 
       <div className="relative max-w-3xl mx-auto text-center">
-        {/* Tag */}
         <div className="contact-tag inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-accent/20 bg-accent/5">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <span className="text-xs font-mono text-accent tracking-wider uppercase">
@@ -345,54 +225,107 @@ export default function Contact() {
           </span>
         </div>
 
-        {/* Heading */}
         <h2 className="contact-heading text-3xl md:text-5xl font-bold mb-6 leading-tight">
           Pronto para testar a resiliência{" "}
           <span className="gradient-text">do seu time?</span>
         </h2>
 
-        {/* Description */}
         <p className="contact-desc text-lg text-muted mb-12 leading-relaxed">
           Sem formulários intermináveis. Conte-nos sobre seu contexto e montamos
           uma proposta sob medida. Respondemos em até 24 horas.
         </p>
 
-        {/* Form */}
-        <div className="contact-form p-8 rounded-lg border border-border bg-surface">
+        <div className="contact-form p-8 md:p-10 rounded-lg border border-border bg-surface">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div className="grid sm:grid-cols-2 gap-6">
-              <FloatingInput
-                label="Nome"
-                name="nome"
-                value={formData.nome}
-                error={errors.nome}
-                onChange={handleChange}
-              />
-              <FloatingInput
-                label="Empresa"
-                name="empresa"
-                value={formData.empresa}
-                error={errors.empresa}
-                onChange={handleChange}
-              />
+              {/* Nome */}
+              <div className="text-left">
+                <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleChange}
+                  placeholder="Seu nome"
+                  className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
+                    errors.nome
+                      ? "border-red-500/60 focus:border-red-500"
+                      : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
+                  }`}
+                />
+                {errors.nome && (
+                  <p className="text-xs text-red-400 mt-1 font-mono">{errors.nome}</p>
+                )}
+              </div>
+
+              {/* Empresa */}
+              <div className="text-left">
+                <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
+                  Empresa
+                </label>
+                <input
+                  type="text"
+                  name="empresa"
+                  value={formData.empresa}
+                  onChange={handleChange}
+                  placeholder="Sua empresa"
+                  className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
+                    errors.empresa
+                      ? "border-red-500/60 focus:border-red-500"
+                      : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
+                  }`}
+                />
+                {errors.empresa && (
+                  <p className="text-xs text-red-400 mt-1 font-mono">{errors.empresa}</p>
+                )}
+              </div>
             </div>
 
-            <FloatingInput
-              label="E-mail"
-              name="email"
-              type="email"
-              value={formData.email}
-              error={errors.email}
-              onChange={handleChange}
-            />
+            {/* E-mail */}
+            <div className="text-left">
+              <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
+                E-mail
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="seu@email.com"
+                className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
+                  errors.email
+                    ? "border-red-500/60 focus:border-red-500"
+                    : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
+                }`}
+              />
+              {errors.email && (
+                <p className="text-xs text-red-400 mt-1 font-mono">{errors.email}</p>
+              )}
+            </div>
 
-            <FloatingTextarea
-              label="Mensagem"
-              name="mensagem"
-              value={formData.mensagem}
-              error={errors.mensagem}
-              onChange={handleChange}
-            />
+            {/* Mensagem */}
+            <div className="text-left">
+              <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
+                Mensagem
+              </label>
+              <textarea
+                name="mensagem"
+                rows={5}
+                value={formData.mensagem}
+                onChange={handleChange}
+                placeholder="Conte-nos sobre seu cenário e objetivos..."
+                className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 resize-none ${
+                  errors.mensagem
+                    ? "border-red-500/60 focus:border-red-500"
+                    : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
+                }`}
+              />
+              {errors.mensagem && (
+                <p className="text-xs text-red-400 mt-1 font-mono">{errors.mensagem}</p>
+              )}
+            </div>
 
             <button
               ref={btnRef}
@@ -400,7 +333,7 @@ export default function Contact() {
               disabled={status === "submitting"}
               onMouseMove={handleBtnMove}
               onMouseLeave={handleBtnLeave}
-              className={`w-full py-3.5 font-semibold rounded text-sm tracking-wide transition-all duration-300 ${
+              className={`w-full py-4 font-semibold rounded text-sm tracking-wide transition-all duration-300 ${
                 status === "success"
                   ? "bg-accent text-background glow-accent-strong"
                   : status === "submitting"
@@ -428,14 +361,13 @@ export default function Contact() {
                   Enviando...
                 </span>
               )}
-              {status === "success" && "✓ Mensagem Enviada!"}
+              {status === "success" && "Mensagem Enviada!"}
               {status === "idle" && "Enviar Mensagem"}
               {status === "error" && "Tentar Novamente"}
             </button>
           </form>
         </div>
 
-        {/* Alternative contact */}
         <p className="contact-alt mt-8 text-sm text-muted">
           Prefere e-mail direto?{" "}
           <a

@@ -258,8 +258,9 @@ export default function WhyItMatters() {
           <p className="text-xl md:text-2xl font-medium leading-relaxed text-foreground/90">
             &ldquo;
             {quoteWords.map((word, i) => (
-              <span key={i} className="quote-word inline-block mr-[0.3em]">
-                {word}
+              <span key={i}>
+                <span className="quote-word inline-block">{word}</span>
+                {i < quoteWords.length - 1 ? " " : ""}
               </span>
             ))}
             &rdquo;
