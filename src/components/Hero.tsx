@@ -16,12 +16,12 @@ export default function Hero() {
 
       tl.fromTo(
         ".hero-eyebrow",
-        { opacity: 0, y: 20, filter: "blur(8px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, delay: 0.4 }
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.7, delay: 0.15 }
       )
         .fromTo(
           ".hero-line",
-          { opacity: 0, y: 80, clipPath: "inset(100% 0 0 0)" },
+          { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" },
           {
             opacity: 1,
             y: 0,
@@ -30,23 +30,23 @@ export default function Hero() {
             stagger: 0.15,
             ease: "expo.out",
           },
-          "-=0.4"
+          "-=0.3"
         )
         .fromTo(
           ".hero-sub",
-          { opacity: 0, y: 30, filter: "blur(6px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9 },
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.8 },
           "-=0.6"
         )
         .fromTo(
           ".hero-desc",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8 },
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.7 },
           "-=0.5"
         )
         .fromTo(
           ".hero-cta",
-          { opacity: 0, y: 20, scale: 0.95 },
+          { opacity: 0, y: 16, scale: 0.95 },
           {
             opacity: 1,
             y: 0,
@@ -83,7 +83,7 @@ export default function Hero() {
       gsap.to(".hero-orb-1", {
         yPercent: -10,
         xPercent: 6,
-        ease: "none",
+        ease: "sine.inOut",
         duration: 22,
         repeat: -1,
         yoyo: true,
@@ -91,7 +91,7 @@ export default function Hero() {
       gsap.to(".hero-orb-2", {
         yPercent: 8,
         xPercent: -5,
-        ease: "none",
+        ease: "sine.inOut",
         duration: 28,
         repeat: -1,
         yoyo: true,
@@ -114,14 +114,14 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // Cursor glow
+  // Cursor glow — use transform for GPU compositing
   useEffect(() => {
     const glow = glowRef.current;
     if (!glow) return;
     const onMove = (e: MouseEvent) => {
       gsap.to(glow, {
-        left: e.clientX,
-        top: e.clientY,
+        x: e.clientX,
+        y: e.clientY,
         duration: 0.4,
         ease: "power3.out",
       });
@@ -175,24 +175,23 @@ export default function Hero() {
           background:
             "radial-gradient(circle, rgba(0,229,160,0.05) 0%, transparent 55%)",
           filter: "blur(40px)",
-          transform: "translate(-50%, -50%)",
+          left: -250,
+          top: -250,
           zIndex: 1,
-          left: -500,
-          top: -500,
         }}
       />
 
       {/* Content */}
       <div className="hero-content relative z-10 max-w-5xl mx-auto px-6 text-center">
         {/* Eyebrow */}
-        <div className="hero-eyebrow eyebrow mb-12 opacity-0">
+        <div className="hero-eyebrow eyebrow mb-8 opacity-0">
           <span className="eyebrow-dot" />
           <span>Cybersecurity Advisory</span>
         </div>
 
         {/* Headline */}
         <h1
-          className="font-bold leading-[1.04] tracking-[-0.04em] mb-8"
+          className="font-bold leading-[1.04] tracking-[-0.04em] mb-6"
           style={{ fontSize: "clamp(2.6rem, 7vw, 6rem)" }}
         >
           <span className="hero-line block opacity-0">A próxima crise</span>
@@ -213,7 +212,7 @@ export default function Hero() {
         </p>
 
         {/* Description */}
-        <p className="hero-desc text-muted/40 text-base md:text-lg max-w-lg mx-auto mb-14 leading-relaxed opacity-0">
+        <p className="hero-desc text-muted/50 text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed opacity-0">
           Traduzimos risco cibernético em estratégia executiva. Simulações de
           crise, advisory e preparação real para incidentes.
         </p>
@@ -245,7 +244,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <div className="hero-scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0">
-        <span className="text-[9px] font-mono text-muted/30 tracking-[0.35em] uppercase">
+        <span className="text-[10px] font-mono text-muted/30 tracking-[0.35em] uppercase">
           scroll
         </span>
         <div
