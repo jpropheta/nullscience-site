@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #050508;
-  --color-foreground: #e8e8ec;
+  --color-background: #030305;
+  --color-foreground: #ededf0;
   --color-accent: #00e5a0;
-  --color-accent-dim: #00e5a033;
-  --color-accent-glow: #00e5a026;
-  --color-surface: #0c0c12;
-  --color-surface-light: #14141e;
+  --color-accent-soft: #00e5a015;
+  --color-accent-dim: #00e5a020;
+  --color-accent-glow: #00e5a00a;
+  --color-cyan: #00b8d4;
+  --color-surface: #08080e;
+  --color-surface-light: #0e0e18;
+  --color-surface-elevated: #141422;
   --color-border: #1a1a2e;
+  --color-border-subtle: #10101e;
+  --color-border-highlight: #ffffff08;
   --color-muted: #6b6b80;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -22,12 +27,14 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
@@ -37,129 +44,291 @@ body {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-background);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-muted);
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* ═══════════════════════════════════
+   CUSTOM EASING — Spring Physics
+   ═══════════════════════════════════ */
+:root {
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-dramatic: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* Grid background pattern */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(0, 229, 160, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 160, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* Glow effects */
-.glow-accent {
-  box-shadow: 0 0 60px rgba(0, 229, 160, 0.15), 0 0 120px rgba(0, 229, 160, 0.05);
-}
-
-.glow-accent-strong {
-  box-shadow: 0 0 30px rgba(0, 229, 160, 0.25), 0 0 80px rgba(0, 229, 160, 0.1), 0 0 160px rgba(0, 229, 160, 0.05);
-}
-
-.text-glow {
-  text-shadow: 0 0 40px rgba(0, 229, 160, 0.3);
-}
-
-/* Gradient text */
+/* ═══════════════════════════════════
+   GRADIENT TEXT
+   ═══════════════════════════════════ */
 .gradient-text {
-  background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  background: linear-gradient(135deg, #00e5a0 0%, #00d4b0 35%, #00b8d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Clip reveal — initial state for GSAP clip-path animations */
-.clip-hide-up {
-  clip-path: inset(100% 0 0 0);
-}
-.clip-hide-down {
-  clip-path: inset(0 0 100% 0);
-}
-.clip-hide-left {
-  clip-path: inset(0 100% 0 0);
-}
-.clip-hide-right {
-  clip-path: inset(0 0 0 100%);
-}
-.clip-visible {
-  clip-path: inset(0 0 0 0);
+.gradient-text-warm {
+  background: linear-gradient(135deg, #00e5a0 0%, #00ffc8 50%, #00e5a0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Noise overlay */
+/* ═══════════════════════════════════
+   GLOW SYSTEM — Layered Depth
+   ═══════════════════════════════════ */
+.text-glow {
+  text-shadow:
+    0 0 60px rgba(0, 229, 160, 0.25),
+    0 0 120px rgba(0, 229, 160, 0.08),
+    0 0 200px rgba(0, 229, 160, 0.03);
+}
+
+.glow-sm {
+  box-shadow:
+    0 0 15px rgba(0, 229, 160, 0.05),
+    0 0 40px rgba(0, 229, 160, 0.02);
+}
+.glow-md {
+  box-shadow:
+    0 0 20px rgba(0, 229, 160, 0.08),
+    0 0 60px rgba(0, 229, 160, 0.04),
+    0 0 100px rgba(0, 229, 160, 0.02);
+}
+.glow-lg {
+  box-shadow:
+    0 0 40px rgba(0, 229, 160, 0.12),
+    0 0 100px rgba(0, 229, 160, 0.06),
+    0 0 180px rgba(0, 229, 160, 0.03);
+}
+
+/* ═══════════════════════════════════
+   DOUBLE-BEZEL (DOPPELRAND) SYSTEM
+   ═══════════════════════════════════ */
+.bezel-outer {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 6px;
+  border-radius: 1.25rem;
+}
+.bezel-inner {
+  background: var(--color-surface);
+  border-radius: calc(1.25rem - 6px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.04);
+}
+
+.bezel-outer-lg {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  border-radius: 1.5rem;
+}
+.bezel-inner-lg {
+  background: var(--color-surface);
+  border-radius: calc(1.5rem - 8px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.04);
+}
+
+/* ═══════════════════════════════════
+   GRID BACKGROUND
+   ═══════════════════════════════════ */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 229, 160, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 160, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* ═══════════════════════════════════
+   NOISE OVERLAY — Film Grain
+   ═══════════════════════════════════ */
 .noise-overlay::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   opacity: 0.015;
   z-index: 1000;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
 }
 
-/* Scan line effect */
+/* Scan lines */
 .scanlines::after {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 999;
   background: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
+    rgba(0, 0, 0, 0.01) 2px,
+    rgba(0, 0, 0, 0.01) 4px
   );
 }
 
-/* Section divider line animation helper */
+/* ═══════════════════════════════════
+   MESH GRADIENT ORBS
+   ═══════════════════════════════════ */
+.mesh-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.mesh-orb-primary {
+  background: radial-gradient(circle, rgba(0, 229, 160, 0.08) 0%, transparent 70%);
+}
+
+.mesh-orb-secondary {
+  background: radial-gradient(circle, rgba(0, 184, 212, 0.05) 0%, transparent 70%);
+}
+
+.mesh-orb-tertiary {
+  background: radial-gradient(circle, rgba(0, 229, 160, 0.04) 0%, rgba(0, 184, 212, 0.02) 50%, transparent 70%);
+}
+
+/* ═══════════════════════════════════
+   CLIP-PATH UTILITIES (for GSAP)
+   ═══════════════════════════════════ */
+.clip-up { clip-path: inset(100% 0 0 0); }
+.clip-down { clip-path: inset(0 0 100% 0); }
+.clip-left { clip-path: inset(0 100% 0 0); }
+.clip-right { clip-path: inset(0 0 0 100%); }
+.clip-visible { clip-path: inset(0 0 0 0); }
+
 .section-line {
   transform-origin: left;
   transform: scaleX(0);
 }
 
-/* Terminal cursor blink */
+/* ═══════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════ */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .terminal-cursor {
   animation: cursor-blink 1s step-end infinite;
 }
 
-/* Subtle pulse for scroll indicator */
-@keyframes gentle-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+/* ═══════════════════════════════════
+   EYEBROW TAG — Premium Pill Badge
+   ═══════════════════════════════════ */
+.eyebrow-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 229, 160, 0.12);
+  background: rgba(0, 229, 160, 0.04);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 160, 0.7);
 }
 
-/* Radial glow pulse */
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.05); }
+.eyebrow-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(0, 229, 160, 0.5);
 }
 
-/* prefers-reduced-motion: disable animations */
+/* ═══════════════════════════════════
+   BUTTON-IN-BUTTON CTA
+   ═══════════════════════════════════ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem 0.75rem 1.75rem;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-background);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  transition: all 700ms var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 40px rgba(0, 229, 160, 0.3), 0 0 80px rgba(0, 229, 160, 0.1);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary .btn-arrow {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 500ms var(--ease-spring);
+}
+
+.btn-primary:hover .btn-arrow {
+  transform: translateX(2px) translateY(-1px) scale(1.05);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  color: rgba(237, 237, 240, 0.8);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  transition: all 500ms var(--ease-spring);
+  position: relative;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(0, 229, 160, 0.3);
+  color: var(--color-accent);
+  box-shadow: 0 0 30px rgba(0, 229, 160, 0.06);
+}
+
+/* ═══════════════════════════════════
+   REDUCED MOTION — Accessibility
+   ═══════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -167,11 +336,7 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-
-  .clip-hide-up,
-  .clip-hide-down,
-  .clip-hide-left,
-  .clip-hide-right {
+  .clip-up, .clip-down, .clip-left, .clip-right {
     clip-path: inset(0 0 0 0) !important;
   }
 }

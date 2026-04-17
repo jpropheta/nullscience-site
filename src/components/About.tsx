@@ -10,11 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 const capabilities = [
   {
     icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-accent">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" className="text-accent">
         <path
           d="M16 2L28 9V23L16 30L4 23V9L16 2Z"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           strokeLinejoin="round"
           className="icon-path"
           pathLength="1"
@@ -22,46 +22,48 @@ const capabilities = [
         <path
           d="M16 12L22 15.5V22.5L16 26L10 22.5V15.5L16 12Z"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           opacity="0.4"
           className="icon-inner"
           pathLength="1"
         />
       </svg>
     ),
-    title: "Advisory Estratégico",
+    title: "Advisory Estrat\u00e9gico",
     description:
-      "Assessoria em cibersegurança para C-level. Transformamos complexidade técnica em decisões executivas claras.",
+      "Assessoria em ciberseguran\u00e7a para C-level. Transformamos complexidade t\u00e9cnica em decis\u00f5es executivas claras.",
+    span: "md:col-span-2",
   },
   {
     icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-accent">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" className="text-accent">
         <circle
           cx="16"
           cy="16"
           r="12"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           className="icon-path"
           pathLength="1"
         />
         <path
           d="M16 8V16L22 20"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           strokeLinecap="round"
           className="icon-inner"
           pathLength="1"
         />
       </svg>
     ),
-    title: "Simulação de Crise",
+    title: "Simula\u00e7\u00e3o de Crise",
     description:
-      "Exercícios imersivos de resposta a incidentes. Seu time pratica sob pressão antes que a pressão real chegue.",
+      "Exerc\u00edcios imersivos de resposta a incidentes. Seu time pratica sob press\u00e3o antes que a press\u00e3o real chegue.",
+    span: "",
   },
   {
     icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-accent">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" className="text-accent">
         <rect
           x="4"
           y="4"
@@ -69,14 +71,14 @@ const capabilities = [
           height="24"
           rx="4"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           className="icon-path"
           pathLength="1"
         />
         <path
           d="M12 12L16 16L20 12M12 18H20"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.2"
           strokeLinecap="round"
           strokeLinejoin="round"
           className="icon-inner"
@@ -84,18 +86,19 @@ const capabilities = [
         />
       </svg>
     ),
-    title: "Preparação para Incidentes",
+    title: "Prepara\u00e7\u00e3o para Incidentes",
     description:
-      "Playbooks, governance e processos de resposta. Da detecção ao board report, tudo documentado e testado.",
+      "Playbooks, governance e processos de resposta. Da detec\u00e7\u00e3o ao board report, tudo documentado e testado.",
+    span: "",
   },
 ];
 
 function TiltCard({
   children,
-  index,
+  className,
 }: {
   children: React.ReactNode;
-  index: number;
+  className?: string;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -109,19 +112,18 @@ function TiltCard({
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(card, {
-      rotateY: x * 12,
-      rotateX: -y * 12,
-      duration: 0.4,
+      rotateY: x * 10,
+      rotateX: -y * 10,
+      duration: 0.5,
       ease: "power2.out",
     });
 
-    // Move glow to cursor position
     if (glowRef.current) {
       gsap.to(glowRef.current, {
-        x: e.clientX - rect.left - 100,
-        y: e.clientY - rect.top - 100,
+        x: e.clientX - rect.left - 120,
+        y: e.clientY - rect.top - 120,
         opacity: 1,
-        duration: 0.3,
+        duration: 0.4,
       });
     }
   }, []);
@@ -130,40 +132,49 @@ function TiltCard({
     gsap.to(cardRef.current, {
       rotateY: 0,
       rotateX: 0,
-      duration: 0.6,
+      duration: 0.8,
       ease: "elastic.out(1, 0.5)",
     });
     if (glowRef.current) {
-      gsap.to(glowRef.current, { opacity: 0, duration: 0.4 });
+      gsap.to(glowRef.current, { opacity: 0, duration: 0.5 });
     }
   }, []);
 
   return (
     <div
-      className="about-card"
-      style={{
-        perspective: "800px",
-        transformStyle: "preserve-3d",
-      }}
+      className={`about-card ${className || ""}`}
+      style={{ perspective: "900px", transformStyle: "preserve-3d" }}
     >
-      <div
-        ref={cardRef}
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        className="relative p-8 rounded-lg border border-border bg-surface hover:border-accent/30 transition-colors duration-500 overflow-hidden"
-        style={{ transformStyle: "preserve-3d" }}
-      >
-        {/* Hover glow */}
+      {/* Double-bezel outer shell */}
+      <div className="bezel-outer h-full">
         <div
-          ref={glowRef}
-          className="absolute w-[200px] h-[200px] rounded-full bg-accent/10 blur-[60px] pointer-events-none opacity-0"
-        />
+          ref={cardRef}
+          onMouseMove={handleMove}
+          onMouseLeave={handleLeave}
+          className="bezel-inner relative p-8 md:p-10 h-full overflow-hidden group"
+          style={{
+            transformStyle: "preserve-3d",
+            transition: "border-color 500ms cubic-bezier(0.32, 0.72, 0, 1)",
+          }}
+        >
+          {/* Hover glow */}
+          <div
+            ref={glowRef}
+            className="absolute w-[240px] h-[240px] rounded-full bg-accent/8 blur-[80px] pointer-events-none opacity-0"
+          />
 
-        {/* Gradient overlay on hover */}
-        <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          {/* Gradient overlay on hover */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-accent/[0.03] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none"
+            style={{
+              transition: "opacity 600ms cubic-bezier(0.32, 0.72, 0, 1)",
+              borderRadius: "inherit",
+            }}
+          />
 
-        <div className="relative" style={{ transform: "translateZ(40px)" }}>
-          {children}
+          <div className="relative" style={{ transform: "translateZ(30px)" }}>
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -177,84 +188,67 @@ export default function About() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Section label line draw
       gsap.fromTo(
         ".about-line",
         { scaleX: 0 },
         {
           scaleX: 1,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-          },
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
         }
       );
 
-      // Heading clip-path reveal
       gsap.fromTo(
         ".about-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 40 },
+        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
         {
           clipPath: "inset(0% 0 0 0)",
           y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".about-heading",
-            start: "top 85%",
-          },
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
+          scrollTrigger: { trigger: ".about-heading", start: "top 85%" },
         }
       );
 
-      // Description
       gsap.fromTo(
         ".about-desc",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 30, filter: "blur(6px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".about-desc",
-            start: "top 85%",
-          },
+          filter: "blur(0px)",
+          duration: 0.9,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
+          scrollTrigger: { trigger: ".about-desc", start: "top 85%" },
         }
       );
 
-      // Cards staggered entrance with clip-path
       gsap.fromTo(
         ".about-card",
-        { clipPath: "inset(0 0 100% 0)", opacity: 0, y: 60 },
+        { clipPath: "inset(0 0 100% 0)", opacity: 0, y: 70, filter: "blur(8px)" },
         {
           clipPath: "inset(0 0 0% 0)",
           opacity: 1,
           y: 0,
-          duration: 0.9,
+          filter: "blur(0px)",
+          duration: 1,
           stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".about-cards",
-            start: "top 80%",
-          },
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
+          scrollTrigger: { trigger: ".about-cards", start: "top 80%" },
         }
       );
 
-      // SVG icon draw-on effect
       gsap.fromTo(
         ".icon-path",
         { strokeDashoffset: 1, strokeDasharray: 1 },
         {
           strokeDashoffset: 0,
-          duration: 1.2,
+          duration: 1.4,
           stagger: 0.2,
           ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: ".about-cards",
-            start: "top 75%",
-          },
+          scrollTrigger: { trigger: ".about-cards", start: "top 75%" },
         }
       );
 
@@ -264,14 +258,11 @@ export default function About() {
         {
           strokeDashoffset: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 1,
           stagger: 0.2,
-          delay: 0.4,
+          delay: 0.3,
           ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: ".about-cards",
-            start: "top 75%",
-          },
+          scrollTrigger: { trigger: ".about-cards", start: "top 75%" },
         }
       );
     },
@@ -279,35 +270,37 @@ export default function About() {
   );
 
   return (
-    <section ref={sectionRef} id="sobre" className="relative py-32 px-6">
+    <section ref={sectionRef} id="sobre" className="relative py-36 md:py-44 px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Label */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="about-line h-px w-12 bg-accent/40 origin-left" />
-          <span className="text-xs font-mono text-accent tracking-widest uppercase">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="about-line h-px w-14 bg-accent/40 origin-left" />
+          <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase">
             Quem Somos
           </span>
         </div>
 
         {/* Heading */}
-        <h2 className="about-heading text-3xl md:text-5xl font-bold mb-6 max-w-3xl leading-tight">
-          Risco cibernético traduzido em{" "}
-          <span className="gradient-text">estratégia executiva</span>
+        <h2 className="about-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 max-w-4xl leading-[1.08] tracking-[-0.03em]">
+          Risco cibern\u00e9tico traduzido em{" "}
+          <span className="gradient-text">estrat\u00e9gia executiva</span>
         </h2>
 
         {/* Description */}
-        <p className="about-desc text-lg text-muted max-w-2xl mb-20 leading-relaxed">
-          A Nullscience é uma firma de advisory em cibersegurança focada no
-          Brasil e América Latina. Não vendemos ferramentas — preparamos
-          organizações para o que vem a seguir.
+        <p className="about-desc text-lg md:text-xl text-muted max-w-2xl mb-24 leading-relaxed">
+          A Nullscience \u00e9 uma firma de advisory em ciberseguran\u00e7a
+          focada no Brasil e Am\u00e9rica Latina. N\u00e3o vendemos ferramentas
+          \u2014 preparamos organiza\u00e7\u00f5es para o que vem a seguir.
         </p>
 
-        {/* Cards */}
-        <div className="about-cards grid md:grid-cols-3 gap-8">
-          {capabilities.map((cap, i) => (
-            <TiltCard key={cap.title} index={i}>
-              <span className="mb-6 block">{cap.icon}</span>
-              <h3 className="text-xl font-semibold mb-3">{cap.title}</h3>
+        {/* Asymmetric Bento Grid */}
+        <div className="about-cards grid md:grid-cols-3 gap-5">
+          {capabilities.map((cap) => (
+            <TiltCard key={cap.title} className={cap.span}>
+              <span className="mb-7 block opacity-80">{cap.icon}</span>
+              <h3 className="text-xl font-semibold mb-3 tracking-[-0.01em]">
+                {cap.title}
+              </h3>
               <p className="text-muted text-sm leading-relaxed">
                 {cap.description}
               </p>

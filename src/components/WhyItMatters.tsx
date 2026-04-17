@@ -13,7 +13,7 @@ const stats = [
     numericValue: 6.75,
     suffix: "M",
     decimals: 2,
-    label: "Custo médio de um data breach no Brasil",
+    label: "Custo m\u00e9dio de um data breach no Brasil",
     source: "IBM, 2024",
   },
   {
@@ -29,7 +29,7 @@ const stats = [
     numericValue: 204,
     suffix: "",
     decimals: 0,
-    label: "dias em média para identificar uma violação",
+    label: "dias em m\u00e9dia para identificar uma viola\u00e7\u00e3o",
     source: "IBM, 2024",
   },
   {
@@ -37,13 +37,13 @@ const stats = [
     numericValue: 2,
     suffix: "x",
     decimals: 0,
-    label: "maior custo quando não há plano de resposta testado",
+    label: "maior custo quando n\u00e3o h\u00e1 plano de resposta testado",
     source: "Ponemon Institute",
   },
 ];
 
 const quoteWords =
-  "O plano de resposta a incidentes que nunca foi testado não é um plano — é uma esperança.".split(
+  "O plano de resposta a incidentes que nunca foi testado n\u00e3o \u00e9 um plano \u2014 \u00e9 uma esperan\u00e7a.".split(
     " "
   );
 
@@ -54,12 +54,12 @@ export default function WhyItMatters() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Background pulse synced to scroll
+      /* Background pulse synced to scroll */
       gsap.fromTo(
         ".wim-pulse",
-        { scale: 0.8, opacity: 0.2 },
+        { scale: 0.7, opacity: 0.15 },
         {
-          scale: 1.2,
+          scale: 1.3,
           opacity: 0.5,
           ease: "none",
           scrollTrigger: {
@@ -71,45 +71,44 @@ export default function WhyItMatters() {
         }
       );
 
-      // Section label line
       gsap.fromTo(
         ".wim-line",
         { scaleX: 0 },
         {
           scaleX: 1,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
         }
       );
 
-      // Heading clip reveal
       gsap.fromTo(
         ".wim-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 40 },
+        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
         {
           clipPath: "inset(0% 0 0 0)",
           y: 0,
-          duration: 1,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".wim-heading", start: "top 85%" },
         }
       );
 
-      // Description
       gsap.fromTo(
         ".wim-desc",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 30, filter: "blur(6px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          filter: "blur(0px)",
+          duration: 0.9,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".wim-desc", start: "top 85%" },
         }
       );
 
-      // Stats cards — clip reveal + slight rotation on scroll
+      /* Stat cards \u2014 double-bezel blur-up entrance with rotation */
       const statCards = gsap.utils.toArray<HTMLElement>(".wim-stat");
       statCards.forEach((card, i) => {
         gsap.fromTo(
@@ -117,17 +116,19 @@ export default function WhyItMatters() {
           {
             clipPath: "inset(0 0 100% 0)",
             opacity: 0,
-            y: 40,
-            rotateX: 8,
+            y: 50,
+            rotateX: 6,
+            filter: "blur(8px)",
           },
           {
             clipPath: "inset(0 0 0% 0)",
             opacity: 1,
             y: 0,
             rotateX: 0,
-            duration: 0.8,
+            filter: "blur(0px)",
+            duration: 0.9,
             delay: i * 0.1,
-            ease: "power3.out",
+            ease: "cubic-bezier(0.32, 0.72, 0, 1)",
             scrollTrigger: {
               trigger: ".wim-stats",
               start: "top 80%",
@@ -135,10 +136,10 @@ export default function WhyItMatters() {
           }
         );
 
-        // Subtle scale/rotate on scroll for depth
+        /* Subtle parallax float */
         gsap.to(card, {
           yPercent: -3 * (i % 2 === 0 ? 1 : -1),
-          rotate: (i % 2 === 0 ? 1 : -1) * 0.5,
+          rotate: (i % 2 === 0 ? 1 : -1) * 0.4,
           ease: "none",
           scrollTrigger: {
             trigger: card,
@@ -149,7 +150,7 @@ export default function WhyItMatters() {
         });
       });
 
-      // Number counting animations
+      /* Number counting */
       const counters = gsap.utils.toArray<HTMLElement>(".wim-counter");
       counters.forEach((counter, i) => {
         const stat = stats[i];
@@ -157,7 +158,7 @@ export default function WhyItMatters() {
 
         gsap.to(obj, {
           val: stat.numericValue,
-          duration: 2,
+          duration: 2.5,
           ease: "power2.out",
           scrollTrigger: {
             trigger: counter,
@@ -174,16 +175,17 @@ export default function WhyItMatters() {
         });
       });
 
-      // Quote — word-by-word dramatic reveal
+      /* Quote \u2014 word-by-word dramatic reveal */
       const quoteWordEls = gsap.utils.toArray<HTMLElement>(".quote-word");
       gsap.fromTo(
         quoteWordEls,
-        { opacity: 0.15, y: 10 },
+        { opacity: 0.1, y: 12, filter: "blur(2px)" },
         {
           opacity: 1,
           y: 0,
+          filter: "blur(0px)",
           stagger: 0.04,
-          duration: 0.5,
+          duration: 0.6,
           ease: "power2.out",
           scrollTrigger: {
             trigger: ".wim-quote",
@@ -198,76 +200,93 @@ export default function WhyItMatters() {
   );
 
   return (
-    <section ref={sectionRef} id="por-que" className="relative py-32 px-6">
+    <section ref={sectionRef} id="por-que" className="relative py-36 md:py-44 px-6">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-surface to-background" />
 
-      {/* Pulsing glow synced to scroll */}
-      <div className="wim-pulse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent/5 blur-[200px] pointer-events-none" />
+      {/* Pulsing mesh orb */}
+      <div className="wim-pulse mesh-orb mesh-orb-primary" style={{ width: "700px", height: "700px", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
 
       <div className="relative max-w-6xl mx-auto">
         {/* Label */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="wim-line h-px w-12 bg-accent/40 origin-left" />
-          <span className="text-xs font-mono text-accent tracking-widest uppercase">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="wim-line h-px w-14 bg-accent/40 origin-left" />
+          <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase">
             Por Que Importa
           </span>
         </div>
 
         {/* Heading */}
-        <h2 className="wim-heading text-3xl md:text-5xl font-bold mb-6 max-w-3xl leading-tight">
-          O custo de não estar{" "}
+        <h2 className="wim-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 max-w-4xl leading-[1.08] tracking-[-0.03em]">
+          O custo de n\u00e3o estar{" "}
           <span className="gradient-text">preparado</span>
         </h2>
 
         {/* Description */}
-        <p className="wim-desc text-lg text-muted max-w-2xl mb-16 leading-relaxed">
-          O cenário de ameaças no Brasil está entre os mais agressivos do mundo.
-          A diferença entre empresas que sobrevivem a um incidente e as que não
-          se recuperam? Preparação.
+        <p className="wim-desc text-lg md:text-xl text-muted max-w-2xl mb-20 leading-relaxed">
+          O cen\u00e1rio de amea\u00e7as no Brasil est\u00e1 entre os mais
+          agressivos do mundo. A diferen\u00e7a entre empresas que sobrevivem a
+          um incidente e as que n\u00e3o se recuperam? Prepara\u00e7\u00e3o.
         </p>
 
-        {/* Stats grid */}
+        {/* Stats grid \u2014 double-bezel cards */}
         <div
-          className="wim-stats grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
-          style={{ perspective: "800px" }}
+          className="wim-stats grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          style={{ perspective: "1000px" }}
         >
-          {stats.map((stat, i) => (
-            <div
-              key={stat.label}
-              className="wim-stat relative p-6 rounded-lg border border-border bg-surface hover:border-accent/20 transition-all duration-500 group"
-            >
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative">
-                <span className="wim-counter text-4xl md:text-5xl font-bold gradient-text text-glow block">
-                  {stat.prefix}0{stat.suffix}
-                </span>
-                <p className="text-sm text-muted mt-4 leading-relaxed">
-                  {stat.label}
-                </p>
-                <span className="text-xs font-mono text-muted/50 mt-2 block">
-                  {stat.source}
-                </span>
+          {stats.map((stat) => (
+            <div key={stat.label} className="wim-stat">
+              <div className="bezel-outer h-full group">
+                <div
+                  className="bezel-inner relative p-7 h-full overflow-hidden"
+                  style={{
+                    transition: "all 500ms cubic-bezier(0.32, 0.72, 0, 1)",
+                  }}
+                >
+                  {/* Hover gradient overlay */}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-accent/[0.04] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none"
+                    style={{
+                      borderRadius: "inherit",
+                      transition: "opacity 600ms cubic-bezier(0.32, 0.72, 0, 1)",
+                    }}
+                  />
+                  <div className="relative">
+                    <span className="wim-counter text-4xl md:text-5xl font-bold gradient-text text-glow block">
+                      {stat.prefix}0{stat.suffix}
+                    </span>
+                    <p className="text-sm text-muted/70 mt-4 leading-relaxed">
+                      {stat.label}
+                    </p>
+                    <span className="text-[10px] font-mono text-muted/40 mt-2 block">
+                      {stat.source}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Pull quote — word-by-word reveal */}
-        <div className="wim-quote mt-20 p-8 rounded-lg border border-accent/10 bg-accent/5 max-w-3xl mx-auto text-center">
-          <p className="text-xl md:text-2xl font-medium leading-relaxed text-foreground/90">
-            &ldquo;
-            {quoteWords.map((word, i) => (
-              <span key={i}>
-                <span className="quote-word inline-block">{word}</span>
-                {i < quoteWords.length - 1 ? " " : ""}
+        {/* Pull quote \u2014 double-bezel */}
+        <div className="wim-quote mt-24 max-w-3xl mx-auto">
+          <div className="bezel-outer-lg">
+            <div className="bezel-inner-lg p-10 md:p-12 text-center">
+              <p className="text-xl md:text-2xl font-medium leading-relaxed text-foreground/85">
+                &ldquo;
+                {quoteWords.map((word, i) => (
+                  <span key={i}>
+                    <span className="quote-word inline-block">{word}</span>
+                    {i < quoteWords.length - 1 ? " " : ""}
+                  </span>
+                ))}
+                &rdquo;
+              </p>
+              <span className="text-xs text-muted/50 font-mono mt-6 block">
+                \u2014 Nullscience
               </span>
-            ))}
-            &rdquo;
-          </p>
-          <span className="text-sm text-muted font-mono mt-4 block">
-            — Nullscience
-          </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

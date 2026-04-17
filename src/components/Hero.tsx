@@ -1,139 +1,18 @@
 "use client";
 
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── Reduced motion helper ── */
 function prefersReducedMotion() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/* ── Particle grid background ── */
-function ParticleGrid() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouse = useRef({ x: -1000, y: -1000 });
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    const particles: {
-      x: number;
-      y: number;
-      baseX: number;
-      baseY: number;
-      size: number;
-      alpha: number;
-      speed: number;
-    }[] = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
-    };
-
-    const initParticles = () => {
-      particles.length = 0;
-      const spacing = 80;
-      const cols = Math.ceil(canvas.width / spacing);
-      const rows = Math.ceil(canvas.height / spacing);
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          particles.push({
-            x: i * spacing + spacing / 2,
-            y: j * spacing + spacing / 2,
-            baseX: i * spacing + spacing / 2,
-            baseY: j * spacing + spacing / 2,
-            size: Math.random() * 1.5 + 0.5,
-            alpha: Math.random() * 0.3 + 0.05,
-            speed: Math.random() * 0.02 + 0.01,
-          });
-        }
-      }
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const mx = mouse.current.x;
-      const my = mouse.current.y;
-
-      for (const p of particles) {
-        const dx = mx - p.x;
-        const dy = my - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const maxDist = 200;
-
-        if (dist < maxDist) {
-          const force = (1 - dist / maxDist) * 30;
-          p.x = p.baseX - (dx / dist) * force;
-          p.y = p.baseY - (dy / dist) * force;
-        } else {
-          p.x += (p.baseX - p.x) * 0.05;
-          p.y += (p.baseY - p.y) * 0.05;
-        }
-
-        // Subtle float
-        p.y += Math.sin(Date.now() * p.speed * 0.001 + p.baseX) * 0.3;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 229, 160, ${p.alpha})`;
-        ctx.fill();
-
-        // Draw connections to nearby particles
-        for (const q of particles) {
-          const d = Math.hypot(p.x - q.x, p.y - q.y);
-          if (d < 100 && d > 0) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = `rgba(0, 229, 160, ${0.03 * (1 - d / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animId = requestAnimationFrame(animate);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-    };
-
-    resize();
-    animate();
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
-      style={{ opacity: 0.6 }}
-    />
-  );
-}
-
-/* ── Magnetic button ── */
+/* ── Magnetic button with spring physics ── */
 function MagneticButton({
   href,
   children,
@@ -152,7 +31,12 @@ function MagneticButton({
     const rect = btn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: "power2.out" });
+    gsap.to(btn, {
+      x: x * 0.2,
+      y: y * 0.2,
+      duration: 0.4,
+      ease: "power2.out",
+    });
   }, []);
 
   const handleLeave = useCallback(() => {
@@ -160,7 +44,7 @@ function MagneticButton({
     gsap.to(btnRef.current, {
       x: 0,
       y: 0,
-      duration: 0.6,
+      duration: 0.7,
       ease: "elastic.out(1, 0.3)",
     });
   }, []);
@@ -182,81 +66,123 @@ function MagneticButton({
   );
 }
 
-/* ── Main Hero ── */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLSpanElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
-  // Split text into words/chars for animation
   useEffect(() => setReady(true), []);
+
+  /* Cursor-tracking ambient glow */
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const glow = glowRef.current;
+    if (!glow) return;
+
+    const onMove = (e: MouseEvent) => {
+      gsap.to(glow, {
+        left: e.clientX,
+        top: e.clientY,
+        duration: 1.8,
+        ease: "power3.out",
+      });
+    };
+
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
 
   useGSAP(
     () => {
       if (!ready || prefersReducedMotion()) return;
 
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({
+        defaults: { ease: "cubic-bezier(0.32, 0.72, 0, 1)" },
+      });
 
-      // Tag line entrance
+      /* Badge entrance — scale + blur up */
       tl.fromTo(
         ".hero-tag",
-        { opacity: 0, y: 30, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.8 }
+        { opacity: 0, y: 30, scale: 0.9, filter: "blur(8px)" },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 0.8,
+          delay: 0.3,
+        }
       );
 
-      // Split headline chars animation
-      const headingChars = headingRef.current?.querySelectorAll(".hero-char");
-      if (headingChars) {
+      /* Headline characters — 3D flip in with blur */
+      const chars = headingRef.current?.querySelectorAll(".hero-char");
+      if (chars) {
         tl.fromTo(
-          headingChars,
-          { opacity: 0, y: 80, rotateX: -90 },
+          chars,
+          { opacity: 0, y: 120, rotateX: -90, filter: "blur(4px)" },
           {
             opacity: 1,
             y: 0,
             rotateX: 0,
-            duration: 0.8,
-            stagger: 0.02,
-            ease: "back.out(1.7)",
-          },
-          "-=0.3"
-        );
-      }
-
-      // Subtitle word-by-word
-      const subWords = subRef.current?.querySelectorAll(".hero-word");
-      if (subWords) {
-        tl.fromTo(
-          subWords,
-          { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" },
-          {
-            opacity: 1,
-            y: 0,
-            clipPath: "inset(0% 0 0 0)",
-            duration: 0.6,
-            stagger: 0.08,
+            filter: "blur(0px)",
+            duration: 1.1,
+            stagger: 0.015,
+            ease: "back.out(1.2)",
           },
           "-=0.4"
         );
       }
 
-      // Description
+      /* Subtitle — word-by-word blur-up reveal */
+      const words = subRef.current?.querySelectorAll(".hero-word");
+      if (words) {
+        tl.fromTo(
+          words,
+          {
+            opacity: 0,
+            y: 40,
+            clipPath: "inset(100% 0 0 0)",
+            filter: "blur(4px)",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            clipPath: "inset(0% 0 0 0)",
+            filter: "blur(0px)",
+            duration: 0.8,
+            stagger: 0.05,
+          },
+          "-=0.6"
+        );
+      }
+
+      /* Description — fade blur up */
       tl.fromTo(
         ".hero-desc",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8 },
-        "-=0.3"
-      );
-
-      // CTAs
-      tl.fromTo(
-        ".hero-cta",
-        { opacity: 0, y: 20, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12 },
+        { opacity: 0, y: 30, filter: "blur(6px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9 },
         "-=0.4"
       );
 
-      // Scroll indicator
+      /* CTA buttons — spring scale in */
+      tl.fromTo(
+        ".hero-cta",
+        { opacity: 0, y: 20, scale: 0.92, filter: "blur(4px)" },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "back.out(1.5)",
+        },
+        "-=0.5"
+      );
+
+      /* Scroll indicator */
       tl.fromTo(
         ".hero-scroll",
         { opacity: 0 },
@@ -264,24 +190,69 @@ export default function Hero() {
         "-=0.2"
       );
 
-      // Scroll-linked parallax: fade + push content as user scrolls
+      /* ── Mesh orbs — slow ambient drift ── */
+      gsap.to(".hero-orb-1", {
+        yPercent: -8,
+        xPercent: 5,
+        scale: 1.1,
+        ease: "none",
+        duration: 20,
+        repeat: -1,
+        yoyo: true,
+      });
+
+      gsap.to(".hero-orb-2", {
+        yPercent: 6,
+        xPercent: -8,
+        scale: 0.9,
+        ease: "none",
+        duration: 25,
+        repeat: -1,
+        yoyo: true,
+      });
+
+      gsap.to(".hero-orb-3", {
+        yPercent: -5,
+        xPercent: -4,
+        scale: 1.05,
+        ease: "none",
+        duration: 18,
+        repeat: -1,
+        yoyo: true,
+      });
+
+      /* ── Scroll-driven parallax ── */
+
+      /* Content: moves up, fades, slightly shrinks */
       gsap.to(".hero-content", {
-        yPercent: 30,
+        yPercent: 40,
         opacity: 0,
         scale: 0.92,
+        filter: "blur(8px)",
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 0.5,
+          scrub: 0.6,
         },
       });
 
-      // Background glow parallax (moves slower)
-      gsap.to(".hero-glow", {
-        yPercent: -20,
-        scale: 1.3,
+      /* Depth layers at different parallax speeds */
+      gsap.to(".hero-depth-1", {
+        yPercent: -15,
+        scale: 1.2,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
+
+      gsap.to(".hero-depth-2", {
+        yPercent: -30,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -291,7 +262,18 @@ export default function Hero() {
         },
       });
 
-      // Scroll indicator morphs on scroll
+      gsap.to(".hero-depth-3", {
+        yPercent: -8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.4,
+        },
+      });
+
+      /* Scroll indicator fades out first */
       gsap.to(".hero-scroll", {
         opacity: 0,
         y: -20,
@@ -299,7 +281,7 @@ export default function Hero() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "15% top",
+          end: "12% top",
           scrub: true,
         },
       });
@@ -307,11 +289,11 @@ export default function Hero() {
     { scope: sectionRef, dependencies: [ready] }
   );
 
-  // Split main heading text into individual chars
-  const headingLine1 = "A próxima crise do";
-  const headingLine2 = "seu time já está";
+  /* Text content */
+  const headingLine1 = "A pr\u00f3xima crise";
+  const headingLine2 = "do seu time j\u00e1 est\u00e1";
   const headingHighlight = "escrita.";
-  const subtitle = "Nós ajudamos a reescrever o final.";
+  const subtitle = "N\u00f3s ajudamos a reescrever o final.";
 
   const renderChars = (text: string, className = "") =>
     text.split("").map((char, i) => (
@@ -324,93 +306,134 @@ export default function Hero() {
       </span>
     ));
 
-  const renderWords = (text: string) => {
-    const words = text.split(" ");
-    return words.map((word, i) => (
+  const renderWords = (text: string) =>
+    text.split(" ").map((word, i, arr) => (
       <span key={i}>
         <span className="hero-word inline-block">{word}</span>
-        {i < words.length - 1 ? " " : ""}
+        {i < arr.length - 1 ? " " : ""}
       </span>
     ));
-  };
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg"
+      className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden"
     >
-      {/* Depth layer 1: Radial glow (farthest back) */}
-      <div className="hero-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full bg-accent/5 blur-[180px] pointer-events-none" />
+      {/* ── Mesh gradient orbs — cinematic depth layers ── */}
+      <div
+        className="hero-orb-1 hero-depth-1 mesh-orb mesh-orb-primary"
+        style={{ width: "1400px", height: "1400px", top: "-20%", left: "-15%" }}
+      />
+      <div
+        className="hero-orb-2 hero-depth-2 mesh-orb mesh-orb-secondary"
+        style={{ width: "800px", height: "800px", top: "10%", right: "-10%" }}
+      />
+      <div
+        className="hero-orb-3 hero-depth-1 mesh-orb mesh-orb-tertiary"
+        style={{ width: "600px", height: "600px", bottom: "5%", left: "20%" }}
+      />
 
-      {/* Depth layer 2: Particle mesh background */}
-      <ParticleGrid />
+      {/* ── Grid pattern ── */}
+      <div className="hero-depth-3 absolute inset-0 grid-bg pointer-events-none opacity-60" />
 
-      {/* Depth layer 3: Secondary accent glow */}
-      <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-accent/3 blur-[120px] pointer-events-none" />
+      {/* ── Cursor-tracking glow ── */}
+      <div
+        ref={glowRef}
+        className="fixed pointer-events-none"
+        style={{
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 55%)",
+          filter: "blur(40px)",
+          transform: "translate(-50%, -50%)",
+          zIndex: 1,
+          left: "-600px",
+          top: "-600px",
+        }}
+      />
 
-      {/* Main content */}
+      {/* ── Main content ── */}
       <div className="hero-content relative z-10 max-w-5xl mx-auto px-6 text-center">
-        {/* Tag line */}
-        <div className="hero-tag inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-accent/20 bg-accent/5 opacity-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          <span className="text-xs font-mono text-accent tracking-wider uppercase">
-            Cybersecurity Advisory
-          </span>
+        {/* Eyebrow Tag */}
+        <div className="hero-tag eyebrow-tag mb-14 opacity-0">
+          <span className="eyebrow-dot" />
+          <span>Cybersecurity Advisory</span>
         </div>
 
-        {/* Main heading with char-by-char animation */}
+        {/* Main headline — massive, dramatic */}
         <h1
           ref={headingRef}
-          className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight mb-8"
-          style={{ perspective: "800px" }}
+          className="font-bold leading-[1.02] tracking-[-0.04em] mb-10"
+          style={{
+            fontSize: "clamp(2.8rem, 7.5vw, 6.5rem)",
+            perspective: "1200px",
+          }}
         >
           {renderChars(headingLine1)}
-          <br className="hidden sm:block" />
+          <br />
           {renderChars(headingLine2 + " ")}
+          <br className="sm:hidden" />
           <span className="gradient-text text-glow">
             {renderChars(headingHighlight)}
           </span>
-          <br />
-          <span
-            ref={subRef}
-            className="text-muted text-3xl sm:text-4xl md:text-5xl font-medium mt-2 block"
-          >
-            {renderWords(subtitle)}
-          </span>
         </h1>
 
+        {/* Subtitle */}
+        <span
+          ref={subRef}
+          className="block text-muted font-light tracking-[-0.01em] mb-12"
+          style={{ fontSize: "clamp(1.2rem, 2.8vw, 1.875rem)" }}
+        >
+          {renderWords(subtitle)}
+        </span>
+
         {/* Description */}
-        <p className="hero-desc text-lg md:text-xl text-muted max-w-2xl mx-auto mb-12 leading-relaxed opacity-0">
-          Traduzimos risco cibernético em estratégia executiva. Simulações de
-          crise, advisory e preparação real para incidentes.
+        <p className="hero-desc text-base md:text-lg text-muted/50 max-w-lg mx-auto mb-16 leading-relaxed opacity-0">
+          Traduzimos risco cibern\u00e9tico em estrat\u00e9gia executiva.
+          Simula\u00e7\u00f5es de crise, advisory e prepara\u00e7\u00e3o real
+          para incidentes.
         </p>
 
-        {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <MagneticButton
-            href="#crisislab"
-            className="hero-cta px-8 py-3.5 bg-accent text-background font-semibold rounded text-sm tracking-wide hover:bg-accent/90 transition-all duration-300 glow-accent opacity-0"
-          >
-            Conheça o CrisisLab
+        {/* CTA Buttons — button-in-button architecture */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <MagneticButton href="#crisislab" className="hero-cta btn-primary opacity-0 glow-md">
+            <span>Conhe\u00e7a o CrisisLab</span>
+            <span className="btn-arrow">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M1 13L13 1M13 1H4M13 1V10" />
+              </svg>
+            </span>
           </MagneticButton>
-          <MagneticButton
-            href="#contato"
-            className="hero-cta px-8 py-3.5 border border-border text-foreground rounded text-sm tracking-wide hover:border-accent/40 hover:text-accent transition-all duration-300 opacity-0"
-          >
+          <MagneticButton href="#contato" className="hero-cta btn-secondary opacity-0">
             Fale Conosco
           </MagneticButton>
         </div>
+      </div>
 
-        {/* Scroll indicator */}
-        <div className="hero-scroll absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0">
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-[10px] font-mono text-muted/50 tracking-widest uppercase">
-              scroll
-            </span>
-            <div className="w-5 h-8 rounded-full border border-muted/30 flex items-start justify-center p-1.5">
-              <div className="w-1 h-2 rounded-full bg-accent/60 animate-bounce" />
-            </div>
-          </div>
+      {/* Scroll indicator */}
+      <div className="hero-scroll absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-[9px] font-mono text-muted/30 tracking-[0.35em] uppercase">
+            scroll
+          </span>
+          <div
+            className="w-px h-12 origin-top"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,229,160,0.5), transparent)",
+            }}
+          />
         </div>
       </div>
     </section>

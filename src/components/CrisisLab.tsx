@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -9,9 +9,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    label: "Cenário",
+    label: "Cen\u00e1rio",
     value:
-      "Ransomware, data breach, insider threat — cenários reais do mercado brasileiro.",
+      "Ransomware, data breach, insider threat \u2014 cen\u00e1rios reais do mercado brasileiro.",
   },
   {
     label: "Formato",
@@ -21,30 +21,29 @@ const features = [
   {
     label: "Plataforma",
     value:
-      "Browser-based, conduzido por facilitador especialista. Sem instalação.",
+      "Browser-based, conduzido por facilitador especialista. Sem instala\u00e7\u00e3o.",
   },
   {
     label: "Resultado",
     value:
-      "Scoring proprietário, relatório executivo e debrief com recomendações acionáveis.",
+      "Scoring propriet\u00e1rio, relat\u00f3rio executivo e debrief com recomenda\u00e7\u00f5es acion\u00e1veis.",
   },
 ];
 
 const terminalLines = [
   { prefix: "$", text: " crisislab init --scenario ransomware", type: "command" as const },
-  { prefix: "▸", text: " Carregando cenário: Ataque ransomware ao setor financeiro", type: "output" as const },
-  { prefix: "▸", text: " Participantes conectados: 12/12", type: "output" as const },
-  { prefix: "▸", text: " Facilitador: ativo", type: "output" as const },
+  { prefix: "\u25b8", text: " Carregando cen\u00e1rio: Ataque ransomware ao setor financeiro", type: "output" as const },
+  { prefix: "\u25b8", text: " Participantes conectados: 12/12", type: "output" as const },
+  { prefix: "\u25b8", text: " Facilitador: ativo", type: "output" as const },
   { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "⚡", text: " Fase 1: Detecção Inicial", type: "phase" as const },
-  { prefix: "", text: "08:00 — Alerta SIEM: atividade anômala em servidor de arquivos", type: "log" as const },
-  { prefix: "", text: '08:03 — Ticket aberto: "arquivos inacessíveis no departamento financeiro"', type: "log" as const },
-  { prefix: "", text: "08:07 — Analista SOC: possível criptografia em massa detectada", type: "log" as const },
+  { prefix: "\u26a1", text: " Fase 1: Detec\u00e7\u00e3o Inicial", type: "phase" as const },
+  { prefix: "", text: "08:00 \u2014 Alerta SIEM: atividade an\u00f4mala em servidor de arquivos", type: "log" as const },
+  { prefix: "", text: "08:03 \u2014 Ticket aberto: \u201carquivos inacess\u00edveis no departamento financeiro\u201d", type: "log" as const },
+  { prefix: "", text: "08:07 \u2014 Analista SOC: poss\u00edvel criptografia em massa detectada", type: "log" as const },
   { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "▸", text: " Aguardando decisão do time...", type: "waiting" as const },
+  { prefix: "\u25b8", text: " Aguardando decis\u00e3o do time...", type: "waiting" as const },
 ];
 
-/* ── Typewriter terminal ── */
 function TerminalTyping() {
   const [visibleLines, setVisibleLines] = useState<number>(0);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
@@ -119,99 +118,121 @@ function TerminalTyping() {
 
   return (
     <div ref={termRef} className="relative">
-      <div className="rounded-lg border border-border bg-surface overflow-hidden glow-accent">
-        {/* Terminal header */}
-        <div className="flex items-center gap-2 px-4 py-3 bg-surface-light border-b border-border">
-          <div className="w-3 h-3 rounded-full bg-red-500/60" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-          <div className="w-3 h-3 rounded-full bg-green-500/60" />
-          <span className="ml-3 text-xs font-mono text-muted">
-            crisislab — simulação ativa
-          </span>
-        </div>
+      {/* Double-bezel terminal */}
+      <div className="bezel-outer-lg">
+        <div className="bezel-inner-lg overflow-hidden">
+          {/* Terminal header */}
+          <div className="flex items-center gap-2 px-5 py-3.5 bg-surface-light/50 border-b border-white/[0.04]">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/50" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+              <div className="w-3 h-3 rounded-full bg-green-500/50" />
+            </div>
+            <span className="ml-3 text-[11px] font-mono text-muted/50">
+              crisislab \u2014 simula\u00e7\u00e3o ativa
+            </span>
+          </div>
 
-        {/* Terminal content */}
-        <div className="p-6 font-mono text-sm space-y-2 min-h-[340px]">
-          {terminalLines.map((line, i) => {
-            if (i >= visibleLines) return null;
+          {/* Terminal content */}
+          <div className="p-6 md:p-8 font-mono text-sm space-y-2.5 min-h-[360px]">
+            {terminalLines.map((line, i) => {
+              if (i >= visibleLines) return null;
 
-            const isCurrentLine =
-              i === visibleLines - 1 && !typingComplete;
-            const fullText = line.prefix + line.text;
-            const displayText = isCurrentLine
-              ? fullText.slice(0, currentCharIndex)
-              : fullText;
+              const isCurrentLine = i === visibleLines - 1 && !typingComplete;
+              const fullText = line.prefix + line.text;
+              const displayText = isCurrentLine
+                ? fullText.slice(0, currentCharIndex)
+                : fullText;
 
-            if (line.type === "divider") {
-              return <div key={i} className="h-px bg-border my-3" />;
-            }
+              if (line.type === "divider") {
+                return (
+                  <div
+                    key={i}
+                    className="h-px my-4"
+                    style={{
+                      background:
+                        "linear-gradient(to right, rgba(0,229,160,0.1), transparent)",
+                    }}
+                  />
+                );
+              }
 
-            if (line.type === "phase") {
-              return (
-                <div key={i} className="text-accent font-semibold">
-                  {displayText}
-                </div>
-              );
-            }
+              if (line.type === "phase") {
+                return (
+                  <div key={i} className="text-accent font-semibold text-[13px]">
+                    {displayText}
+                  </div>
+                );
+              }
 
-            if (line.type === "log") {
+              if (line.type === "log") {
+                return (
+                  <div
+                    key={i}
+                    className="text-muted/70 pl-4 border-l border-accent/15 text-xs"
+                  >
+                    {displayText}
+                  </div>
+                );
+              }
+
+              if (line.type === "waiting") {
+                return (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="text-accent">
+                      {isCurrentLine ? displayText.slice(0, 1) : "\u25b8"}
+                    </span>
+                    <span className="text-foreground/90">
+                      {isCurrentLine ? displayText.slice(1) : line.text}
+                    </span>
+                    {(!isCurrentLine || typingComplete) && (
+                      <span className="w-2 h-4 bg-accent inline-block terminal-cursor" />
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={i}
-                  className="text-muted/80 pl-4 border-l border-accent/20 text-xs"
+                  className={
+                    line.type === "command" ? "text-muted/80" : "text-muted/50"
+                  }
                 >
-                  {displayText}
-                </div>
-              );
-            }
-
-            if (line.type === "waiting") {
-              return (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="text-accent">{isCurrentLine ? displayText.slice(0, 1) : "▸"}</span>
-                  <span className="text-foreground">
-                    {isCurrentLine ? displayText.slice(1) : line.text}
-                  </span>
-                  {(!isCurrentLine || typingComplete) && (
-                    <span className="w-2 h-4 bg-accent inline-block terminal-cursor" />
+                  {line.type === "command" && (
+                    <span className="text-accent">
+                      {isCurrentLine
+                        ? displayText.slice(0, Math.min(currentCharIndex, 1))
+                        : "$"}
+                    </span>
+                  )}
+                  {line.type === "command"
+                    ? isCurrentLine
+                      ? displayText.slice(1)
+                      : line.text
+                    : displayText}
+                  {isCurrentLine && (
+                    <span className="w-2 h-4 bg-accent inline-block ml-0.5 terminal-cursor" />
                   )}
                 </div>
               );
-            }
-
-            return (
-              <div
-                key={i}
-                className={
-                  line.type === "command" ? "text-muted" : "text-muted/60"
-                }
-              >
-                {line.type === "command" && (
-                  <span className="text-accent">
-                    {isCurrentLine
-                      ? displayText.slice(0, Math.min(currentCharIndex, 1))
-                      : "$"}
-                  </span>
-                )}
-                {line.type === "command"
-                  ? isCurrentLine
-                    ? displayText.slice(1)
-                    : line.text
-                  : displayText}
-                {isCurrentLine && (
-                  <span className="w-2 h-4 bg-accent inline-block ml-0.5 terminal-cursor" />
-                )}
-              </div>
-            );
-          })}
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Floating stats */}
-      <div className="terminal-stat absolute -bottom-6 -left-6 p-4 rounded-lg border border-border bg-surface-light glow-accent">
-        <div className="text-2xl font-bold gradient-text">94%</div>
-        <div className="text-xs text-muted font-mono">
-          satisfação pós-exercício
+      {/* Floating stat \u2014 double-bezel */}
+      <div className="terminal-stat absolute -bottom-6 -left-4 md:-left-6">
+        <div className="bezel-outer" style={{ borderRadius: "1rem", padding: "4px" }}>
+          <div
+            className="bezel-inner px-5 py-3.5"
+            style={{ borderRadius: "calc(1rem - 4px)" }}
+          >
+            <div className="text-2xl font-bold gradient-text text-glow">94%</div>
+            <div className="text-[10px] text-muted/60 font-mono mt-0.5">
+              satisfa\u00e7\u00e3o p\u00f3s-exerc\u00edcio
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -225,60 +246,57 @@ export default function CrisisLab() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Label line
       gsap.fromTo(
         ".cl-line",
         { scaleX: 0 },
         {
           scaleX: 1,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
         }
       );
 
-      // Heading with clip-path
       gsap.fromTo(
         ".cl-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 40 },
+        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
         {
           clipPath: "inset(0% 0 0 0)",
           y: 0,
-          duration: 1,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".cl-heading", start: "top 85%" },
         }
       );
 
-      // Descriptions
       gsap.fromTo(
         ".cl-text",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 30, filter: "blur(4px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          filter: "blur(0px)",
+          duration: 0.9,
           stagger: 0.1,
-          ease: "power2.out",
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".cl-text", start: "top 85%" },
         }
       );
 
-      // Feature items with clip-path wipe from left
       gsap.fromTo(
         ".cl-feature",
         { clipPath: "inset(0 100% 0 0)", opacity: 0 },
         {
           clipPath: "inset(0 0% 0 0)",
           opacity: 1,
-          duration: 0.8,
+          duration: 0.9,
           stagger: 0.12,
-          ease: "power3.out",
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".cl-features", start: "top 80%" },
         }
       );
 
-      // Feature progress line
       gsap.fromTo(
         ".cl-progress",
         { scaleY: 0 },
@@ -294,33 +312,31 @@ export default function CrisisLab() {
         }
       );
 
-      // Terminal entrance from right with parallax offset
       gsap.fromTo(
         ".cl-terminal",
-        { x: 80, opacity: 0 },
+        { x: 80, opacity: 0, filter: "blur(10px)" },
         {
           x: 0,
           opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".cl-terminal", start: "top 80%" },
         }
       );
 
-      // Floating stat bounce in
       gsap.fromTo(
         ".terminal-stat",
         { scale: 0, opacity: 0 },
         {
           scale: 1,
           opacity: 1,
-          duration: 0.6,
+          duration: 0.7,
           ease: "back.out(2)",
           scrollTrigger: { trigger: ".cl-terminal", start: "top 60%" },
         }
       );
 
-      // Split-screen parallax: left side moves at different rate than right
       gsap.to(".cl-left", {
         yPercent: -5,
         ease: "none",
@@ -350,52 +366,64 @@ export default function CrisisLab() {
     <section
       ref={sectionRef}
       id="crisislab"
-      className="relative py-32 px-6 overflow-hidden"
+      className="relative py-36 md:py-44 px-6 overflow-hidden"
     >
-      {/* Background accent glow */}
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full bg-accent/3 blur-[150px] pointer-events-none" />
+      {/* Background mesh orb */}
+      <div
+        className="mesh-orb mesh-orb-primary"
+        style={{ width: "600px", height: "600px", top: "30%", right: "-5%" }}
+      />
 
       <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-start">
           {/* Left: info */}
           <div className="cl-left">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="cl-line h-px w-12 bg-accent/40 origin-left" />
-              <span className="text-xs font-mono text-accent tracking-widest uppercase">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="cl-line h-px w-14 bg-accent/40 origin-left" />
+              <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase">
                 Produto
               </span>
             </div>
 
-            <h2 className="cl-heading text-3xl md:text-5xl font-bold mb-6 leading-tight">
-              <span className="gradient-text">CrisisLab</span>
+            <h2 className="cl-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.08] tracking-[-0.03em]">
+              <span className="gradient-text text-glow">CrisisLab</span>
             </h2>
 
             <p className="cl-text text-xl text-muted mb-4 leading-relaxed">
-              Simulações de crise cibernética conduzidas por facilitador.
+              Simula\u00e7\u00f5es de crise cibern\u00e9tica conduzidas por
+              facilitador.
             </p>
 
-            <p className="cl-text text-muted mb-12 leading-relaxed">
-              Testamos a resposta do seu time antes que um incidente real o faça.
-              Cenários realistas, pressão controlada, resultados mensuráveis. Seu
-              CISO recebe um relatório que o board entende.
+            <p className="cl-text text-muted/70 mb-14 leading-relaxed">
+              Testamos a resposta do seu time antes que um incidente real o
+              fa\u00e7a. Cen\u00e1rios realistas, press\u00e3o controlada,
+              resultados mensur\u00e1veis. Seu CISO recebe um relat\u00f3rio que
+              o board entende.
             </p>
 
             {/* Feature list */}
             <div className="cl-features relative">
-              {/* Animated progress line */}
-              <div className="absolute left-[7px] top-0 bottom-0 w-px bg-border">
+              <div className="absolute left-[7px] top-0 bottom-0 w-px bg-border/50">
                 <div className="cl-progress w-full h-full bg-accent origin-top" />
               </div>
 
               <div className="space-y-8">
                 {features.map((feat) => (
-                  <div key={feat.label} className="cl-feature flex gap-6 items-start">
-                    <div className="w-[15px] h-[15px] rounded-full border-2 border-accent bg-background flex-shrink-0 mt-1" />
+                  <div
+                    key={feat.label}
+                    className="cl-feature flex gap-6 items-start"
+                  >
+                    <div
+                      className="w-[15px] h-[15px] rounded-full border-2 border-accent bg-background flex-shrink-0 mt-1"
+                      style={{
+                        boxShadow: "0 0 8px rgba(0,229,160,0.15)",
+                      }}
+                    />
                     <div>
-                      <span className="text-xs font-mono text-accent tracking-wider uppercase block mb-1">
+                      <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase block mb-1.5">
                         {feat.label}
                       </span>
-                      <p className="text-sm text-muted leading-relaxed">
+                      <p className="text-sm text-muted/70 leading-relaxed">
                         {feat.value}
                       </p>
                     </div>

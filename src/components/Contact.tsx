@@ -23,6 +23,15 @@ interface FormErrors {
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
+const inputClasses = (hasError: boolean) =>
+  `w-full px-5 py-3.5 bg-background border text-sm text-foreground placeholder:text-muted/30 focus:outline-none ${
+    hasError
+      ? "border-red-500/50 focus:border-red-500/70"
+      : "border-border/60 focus:border-accent/40 focus:shadow-[0_0_25px_rgba(0,229,160,0.08)]"
+  }` +
+  " rounded-xl" +
+  " transition-all duration-500";
+
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -48,14 +57,14 @@ export default function Contact() {
 
   const validate = useCallback((): FormErrors => {
     const errs: FormErrors = {};
-    if (!formData.nome.trim()) errs.nome = "Nome é obrigatório";
-    if (!formData.empresa.trim()) errs.empresa = "Empresa é obrigatória";
+    if (!formData.nome.trim()) errs.nome = "Nome \u00e9 obrigat\u00f3rio";
+    if (!formData.empresa.trim()) errs.empresa = "Empresa \u00e9 obrigat\u00f3ria";
     if (!formData.email.trim()) {
-      errs.email = "E-mail é obrigatório";
+      errs.email = "E-mail \u00e9 obrigat\u00f3rio";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = "E-mail inválido";
+      errs.email = "E-mail inv\u00e1lido";
     }
-    if (!formData.mensagem.trim()) errs.mensagem = "Mensagem é obrigatória";
+    if (!formData.mensagem.trim()) errs.mensagem = "Mensagem \u00e9 obrigat\u00f3ria";
     return errs;
   }, [formData]);
 
@@ -69,7 +78,7 @@ export default function Contact() {
           gsap.fromTo(
             formRef.current,
             { x: -8 },
-            { x: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" }
+            { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }
           );
         }
         return;
@@ -78,7 +87,7 @@ export default function Contact() {
       setStatus("submitting");
 
       const subject = encodeURIComponent(
-        `Contato Nullscience — ${formData.empresa}`
+        `Contato Nullscience \u2014 ${formData.empresa}`
       );
       const body = encodeURIComponent(
         `Nome: ${formData.nome}\nEmpresa: ${formData.empresa}\nE-mail: ${formData.email}\n\nMensagem:\n${formData.mensagem}`
@@ -92,7 +101,7 @@ export default function Contact() {
         gsap.fromTo(
           btnRef.current,
           { scale: 0.95 },
-          { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.4)" }
+          { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" }
         );
       }
 
@@ -112,9 +121,9 @@ export default function Contact() {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     gsap.to(btn, {
-      x: x * 0.15,
-      y: y * 0.15,
-      duration: 0.3,
+      x: x * 0.12,
+      y: y * 0.12,
+      duration: 0.4,
       ease: "power2.out",
     });
   }, []);
@@ -123,7 +132,7 @@ export default function Contact() {
     gsap.to(btnRef.current, {
       x: 0,
       y: 0,
-      duration: 0.5,
+      duration: 0.6,
       ease: "elastic.out(1, 0.3)",
     });
   }, []);
@@ -134,12 +143,13 @@ export default function Contact() {
 
       gsap.fromTo(
         ".contact-tag",
-        { opacity: 0, scale: 0.9, y: 20 },
+        { opacity: 0, scale: 0.9, y: 20, filter: "blur(4px)" },
         {
           opacity: 1,
           scale: 1,
           y: 0,
-          duration: 0.6,
+          filter: "blur(0px)",
+          duration: 0.7,
           ease: "back.out(1.7)",
           scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
         }
@@ -147,37 +157,40 @@ export default function Contact() {
 
       gsap.fromTo(
         ".contact-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 40 },
+        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
         {
           clipPath: "inset(0% 0 0 0)",
           y: 0,
-          duration: 1,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".contact-heading", start: "top 85%" },
         }
       );
 
       gsap.fromTo(
         ".contact-desc",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 30, filter: "blur(6px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          filter: "blur(0px)",
+          duration: 0.9,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".contact-desc", start: "top 85%" },
         }
       );
 
       gsap.fromTo(
         ".contact-form",
-        { opacity: 0, y: 60, clipPath: "inset(0 0 100% 0)" },
+        { opacity: 0, y: 70, clipPath: "inset(0 0 100% 0)", filter: "blur(10px)" },
         {
           opacity: 1,
           y: 0,
           clipPath: "inset(0 0 0% 0)",
-          duration: 1,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".contact-form", start: "top 85%" },
         }
       );
@@ -188,17 +201,17 @@ export default function Contact() {
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          ease: "power2.out",
+          duration: 0.7,
+          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
           scrollTrigger: { trigger: ".contact-alt", start: "top 90%" },
         }
       );
 
       gsap.fromTo(
         ".contact-glow",
-        { scale: 0.6, opacity: 0.3 },
+        { scale: 0.5, opacity: 0.2 },
         {
-          scale: 1.2,
+          scale: 1.3,
           opacity: 0.6,
           ease: "none",
           scrollTrigger: {
@@ -214,165 +227,157 @@ export default function Contact() {
   );
 
   return (
-    <section ref={sectionRef} id="contato" className="relative py-32 px-6">
-      <div className="contact-glow absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-accent/5 blur-[150px] pointer-events-none" />
+    <section ref={sectionRef} id="contato" className="relative py-36 md:py-44 px-6">
+      <div className="contact-glow mesh-orb mesh-orb-primary" style={{ width: "700px", height: "500px", bottom: "0", left: "50%", transform: "translateX(-50%)" }} />
 
       <div className="relative max-w-3xl mx-auto text-center">
-        <div className="contact-tag inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-accent/20 bg-accent/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          <span className="text-xs font-mono text-accent tracking-wider uppercase">
-            Vamos Conversar
-          </span>
+        <div className="contact-tag eyebrow-tag mb-10">
+          <span className="eyebrow-dot" />
+          <span>Vamos Conversar</span>
         </div>
 
-        <h2 className="contact-heading text-3xl md:text-5xl font-bold mb-6 leading-tight">
-          Pronto para testar a resiliência{" "}
+        <h2 className="contact-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.08] tracking-[-0.03em]">
+          Pronto para testar a resili\u00eancia{" "}
           <span className="gradient-text">do seu time?</span>
         </h2>
 
-        <p className="contact-desc text-lg text-muted mb-12 leading-relaxed">
-          Sem formulários intermináveis. Conte-nos sobre seu contexto e montamos
-          uma proposta sob medida. Respondemos em até 24 horas.
+        <p className="contact-desc text-lg md:text-xl text-muted mb-14 leading-relaxed">
+          Sem formul\u00e1rios intermin\u00e1veis. Conte-nos sobre seu contexto
+          e montamos uma proposta sob medida. Respondemos em at\u00e9 24 horas.
         </p>
 
-        <div className="contact-form p-8 md:p-10 rounded-lg border border-border bg-surface">
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
-            <div className="grid sm:grid-cols-2 gap-6">
-              {/* Nome */}
-              <div className="text-left">
-                <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  placeholder="Seu nome"
-                  className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
-                    errors.nome
-                      ? "border-red-500/60 focus:border-red-500"
-                      : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-                  }`}
-                />
-                {errors.nome && (
-                  <p className="text-xs text-red-400 mt-1 font-mono">{errors.nome}</p>
-                )}
-              </div>
-
-              {/* Empresa */}
-              <div className="text-left">
-                <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
-                  Empresa
-                </label>
-                <input
-                  type="text"
-                  name="empresa"
-                  value={formData.empresa}
-                  onChange={handleChange}
-                  placeholder="Sua empresa"
-                  className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
-                    errors.empresa
-                      ? "border-red-500/60 focus:border-red-500"
-                      : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-                  }`}
-                />
-                {errors.empresa && (
-                  <p className="text-xs text-red-400 mt-1 font-mono">{errors.empresa}</p>
-                )}
-              </div>
-            </div>
-
-            {/* E-mail */}
-            <div className="text-left">
-              <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
-                E-mail
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="seu@email.com"
-                className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 ${
-                  errors.email
-                    ? "border-red-500/60 focus:border-red-500"
-                    : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-                }`}
-              />
-              {errors.email && (
-                <p className="text-xs text-red-400 mt-1 font-mono">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Mensagem */}
-            <div className="text-left">
-              <label className="text-xs font-mono text-muted tracking-wider uppercase block mb-2">
-                Mensagem
-              </label>
-              <textarea
-                name="mensagem"
-                rows={5}
-                value={formData.mensagem}
-                onChange={handleChange}
-                placeholder="Conte-nos sobre seu cenário e objetivos..."
-                className={`w-full px-4 py-3 bg-background border rounded text-sm text-foreground placeholder:text-muted/40 focus:outline-none transition-all duration-300 resize-none ${
-                  errors.mensagem
-                    ? "border-red-500/60 focus:border-red-500"
-                    : "border-border focus:border-accent/60 focus:shadow-[0_0_20px_rgba(0,229,160,0.1)]"
-                }`}
-              />
-              {errors.mensagem && (
-                <p className="text-xs text-red-400 mt-1 font-mono">{errors.mensagem}</p>
-              )}
-            </div>
-
-            <button
-              ref={btnRef}
-              type="submit"
-              disabled={status === "submitting"}
-              onMouseMove={handleBtnMove}
-              onMouseLeave={handleBtnLeave}
-              className={`w-full py-4 font-semibold rounded text-sm tracking-wide transition-all duration-300 ${
-                status === "success"
-                  ? "bg-accent text-background glow-accent-strong"
-                  : status === "submitting"
-                  ? "bg-accent/60 text-background cursor-wait"
-                  : "bg-accent text-background hover:bg-accent/90 glow-accent"
-              }`}
-            >
-              {status === "submitting" && (
-                <span className="inline-flex items-center gap-2">
-                  <svg
-                    className="animate-spin w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeDasharray="31.4 31.4"
-                      strokeLinecap="round"
+        {/* Double-bezel form container */}
+        <div className="contact-form">
+          <div className="bezel-outer-lg">
+            <div className="bezel-inner-lg p-8 md:p-12">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="text-left">
+                    <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
+                      Nome
+                    </label>
+                    <input
+                      type="text"
+                      name="nome"
+                      value={formData.nome}
+                      onChange={handleChange}
+                      placeholder="Seu nome"
+                      className={inputClasses(!!errors.nome)}
+                      style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
                     />
-                  </svg>
-                  Enviando...
-                </span>
-              )}
-              {status === "success" && "Mensagem Enviada!"}
-              {status === "idle" && "Enviar Mensagem"}
-              {status === "error" && "Tentar Novamente"}
-            </button>
-          </form>
+                    {errors.nome && (
+                      <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.nome}</p>
+                    )}
+                  </div>
+
+                  <div className="text-left">
+                    <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
+                      Empresa
+                    </label>
+                    <input
+                      type="text"
+                      name="empresa"
+                      value={formData.empresa}
+                      onChange={handleChange}
+                      placeholder="Sua empresa"
+                      className={inputClasses(!!errors.empresa)}
+                      style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
+                    />
+                    {errors.empresa && (
+                      <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.empresa}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="text-left">
+                  <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
+                    E-mail
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="seu@email.com"
+                    className={inputClasses(!!errors.email)}
+                    style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
+                  />
+                  {errors.email && (
+                    <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.email}</p>
+                  )}
+                </div>
+
+                <div className="text-left">
+                  <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
+                    Mensagem
+                  </label>
+                  <textarea
+                    name="mensagem"
+                    rows={5}
+                    value={formData.mensagem}
+                    onChange={handleChange}
+                    placeholder="Conte-nos sobre seu cen\u00e1rio e objetivos..."
+                    className={inputClasses(!!errors.mensagem) + " resize-none"}
+                    style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
+                  />
+                  {errors.mensagem && (
+                    <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.mensagem}</p>
+                  )}
+                </div>
+
+                {/* Submit \u2014 full-width pill with magnetic hover */}
+                <button
+                  ref={btnRef}
+                  type="submit"
+                  disabled={status === "submitting"}
+                  onMouseMove={handleBtnMove}
+                  onMouseLeave={handleBtnLeave}
+                  className={`w-full py-4 font-semibold rounded-full text-sm tracking-wide ${
+                    status === "success"
+                      ? "bg-accent text-background glow-lg"
+                      : status === "submitting"
+                      ? "bg-accent/60 text-background cursor-wait"
+                      : "bg-accent text-background hover:shadow-[0_0_40px_rgba(0,229,160,0.25)] active:scale-[0.98]"
+                  }`}
+                  style={{
+                    transition: "all 500ms cubic-bezier(0.32, 0.72, 0, 1)",
+                  }}
+                >
+                  {status === "submitting" && (
+                    <span className="inline-flex items-center gap-2">
+                      <svg
+                        className="animate-spin w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          strokeDasharray="31.4 31.4"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      Enviando...
+                    </span>
+                  )}
+                  {status === "success" && "Mensagem Enviada!"}
+                  {status === "idle" && "Enviar Mensagem"}
+                  {status === "error" && "Tentar Novamente"}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
 
-        <p className="contact-alt mt-8 text-sm text-muted">
+        <p className="contact-alt mt-10 text-sm text-muted/50">
           Prefere e-mail direto?{" "}
           <a
             href="mailto:contato@nullscience.ai"
-            className="text-accent hover:underline transition-colors"
+            className="text-accent/80 hover:text-accent hover:underline"
+            style={{ transition: "all 400ms cubic-bezier(0.32, 0.72, 0, 1)" }}
           >
             contato@nullscience.ai
           </a>
