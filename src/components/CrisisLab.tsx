@@ -1,441 +1,212 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    label: "Cenário",
-    value:
-      "Ransomware, data breach, insider threat — cenários reais do mercado brasileiro.",
+    label: "Cenários realistas",
+    desc: "Ransomware, fraude, vazamento de dados e crises regulatórias — construídos com base em incidentes reais.",
   },
   {
-    label: "Formato",
-    value:
-      "Meia-dia ou dia inteiro. Remoto ou presencial. 6 a 20 participantes.",
+    label: "Comunicação multi-stakeholder",
+    desc: "Mensagens adaptadas para board, jurídico, comunicação, TI e reguladores — simultaneamente.",
   },
   {
-    label: "Plataforma",
-    value:
-      "Browser-based, conduzido por facilitador especialista. Sem instalação.",
+    label: "Métricas e scoring",
+    desc: "Relatório pós-sessão com gaps identificados, tempo de resposta e recomendações acionáveis.",
   },
   {
-    label: "Resultado",
-    value:
-      "Scoring proprietário, relatório executivo e debrief com recomendações acionáveis.",
+    label: "Facilitação especializada",
+    desc: "Conduzido por profissionais com experiência real em resposta a incidentes em grandes organizações.",
   },
 ];
-
-const terminalLines = [
-  { prefix: "$", text: " crisislab init --scenario ransomware", type: "command" as const },
-  { prefix: "▸", text: " Carregando cenário: Ataque ransomware ao setor financeiro", type: "output" as const },
-  { prefix: "▸", text: " Participantes conectados: 12/12", type: "output" as const },
-  { prefix: "▸", text: " Facilitador: ativo", type: "output" as const },
-  { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "⚡", text: " Fase 1: Detecção Inicial", type: "phase" as const },
-  { prefix: "", text: "08:00 — Alerta SIEM: atividade anômala em servidor de arquivos", type: "log" as const },
-  { prefix: "", text: "08:03 — Ticket aberto: “arquivos inacessíveis no departamento financeiro”", type: "log" as const },
-  { prefix: "", text: "08:07 — Analista SOC: possível criptografia em massa detectada", type: "log" as const },
-  { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "▸", text: " Aguardando decisão do time...", type: "waiting" as const },
-];
-
-function TerminalTyping() {
-  const [visibleLines, setVisibleLines] = useState<number>(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
-  const [typingComplete, setTypingComplete] = useState(false);
-  const termRef = useRef<HTMLDivElement>(null);
-  const triggered = useRef(false);
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setVisibleLines(terminalLines.length);
-        setTypingComplete(true);
-        return;
-      }
-
-      ScrollTrigger.create({
-        trigger: termRef.current,
-        start: "top 75%",
-        once: true,
-        onEnter: () => {
-          if (!triggered.current) {
-            triggered.current = true;
-            startTyping();
-          }
-        },
-      });
-    },
-    { scope: termRef }
-  );
-
-  const startTyping = useCallback(() => {
-    let lineIdx = 0;
-
-    const typeLine = () => {
-      if (lineIdx >= terminalLines.length) {
-        setTypingComplete(true);
-        return;
-      }
-
-      const line = terminalLines[lineIdx];
-      const fullText = line.prefix + line.text;
-      setVisibleLines(lineIdx + 1);
-
-      if (line.type === "divider") {
-        lineIdx++;
-        setTimeout(typeLine, 200);
-        return;
-      }
-
-      let charIdx = 0;
-      const typeChar = () => {
-        if (charIdx <= fullText.length) {
-          setCurrentCharIndex(charIdx);
-          charIdx++;
-          const delay =
-            line.type === "command"
-              ? 30 + Math.random() * 40
-              : 10 + Math.random() * 15;
-          setTimeout(typeChar, delay);
-        } else {
-          lineIdx++;
-          setCurrentCharIndex(0);
-          setTimeout(typeLine, line.type === "command" ? 400 : 150);
-        }
-      };
-
-      typeChar();
-    };
-
-    typeLine();
-  }, []);
-
-  return (
-    <div ref={termRef} className="relative">
-      {/* Double-bezel terminal */}
-      <div className="bezel-outer-lg">
-        <div className="bezel-inner-lg overflow-hidden">
-          {/* Terminal header */}
-          <div className="flex items-center gap-2 px-5 py-3.5 bg-surface-light/50 border-b border-white/[0.04]">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/50" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-              <div className="w-3 h-3 rounded-full bg-green-500/50" />
-            </div>
-            <span className="ml-3 text-[11px] font-mono text-muted/50">
-              crisislab — simulação ativa
-            </span>
-          </div>
-
-          {/* Terminal content */}
-          <div className="p-6 md:p-8 font-mono text-sm space-y-2.5 min-h-[360px]">
-            {terminalLines.map((line, i) => {
-              if (i >= visibleLines) return null;
-
-              const isCurrentLine = i === visibleLines - 1 && !typingComplete;
-              const fullText = line.prefix + line.text;
-              const displayText = isCurrentLine
-                ? fullText.slice(0, currentCharIndex)
-                : fullText;
-
-              if (line.type === "divider") {
-                return (
-                  <div
-                    key={i}
-                    className="h-px my-4"
-                    style={{
-                      background:
-                        "linear-gradient(to right, rgba(0,229,160,0.1), transparent)",
-                    }}
-                  />
-                );
-              }
-
-              if (line.type === "phase") {
-                return (
-                  <div key={i} className="text-accent font-semibold text-[13px]">
-                    {displayText}
-                  </div>
-                );
-              }
-
-              if (line.type === "log") {
-                return (
-                  <div
-                    key={i}
-                    className="text-muted/70 pl-4 border-l border-accent/15 text-xs"
-                  >
-                    {displayText}
-                  </div>
-                );
-              }
-
-              if (line.type === "waiting") {
-                return (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="text-accent">
-                      {isCurrentLine ? displayText.slice(0, 1) : "▸"}
-                    </span>
-                    <span className="text-foreground/90">
-                      {isCurrentLine ? displayText.slice(1) : line.text}
-                    </span>
-                    {(!isCurrentLine || typingComplete) && (
-                      <span className="w-2 h-4 bg-accent inline-block terminal-cursor" />
-                    )}
-                  </div>
-                );
-              }
-
-              return (
-                <div
-                  key={i}
-                  className={
-                    line.type === "command" ? "text-muted/80" : "text-muted/50"
-                  }
-                >
-                  {line.type === "command" && (
-                    <span className="text-accent">
-                      {isCurrentLine
-                        ? displayText.slice(0, Math.min(currentCharIndex, 1))
-                        : "$"}
-                    </span>
-                  )}
-                  {line.type === "command"
-                    ? isCurrentLine
-                      ? displayText.slice(1)
-                      : line.text
-                    : displayText}
-                  {isCurrentLine && (
-                    <span className="w-2 h-4 bg-accent inline-block ml-0.5 terminal-cursor" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Floating stat — double-bezel */}
-      <div className="terminal-stat absolute -bottom-6 -left-4 md:-left-6">
-        <div className="bezel-outer" style={{ borderRadius: "1rem", padding: "4px" }}>
-          <div
-            className="bezel-inner px-5 py-3.5"
-            style={{ borderRadius: "calc(1rem - 4px)" }}
-          >
-            <div className="text-2xl font-bold gradient-text text-glow">94%</div>
-            <div className="text-[10px] text-muted/60 font-mono mt-0.5">
-              satisfação pós-exercício
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function CrisisLab() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Left column: heading + description
       gsap.fromTo(
-        ".cl-line",
-        { scaleX: 0 },
+        ".cl-left",
+        { opacity: 0, x: -40 },
         {
-          scaleX: 1,
+          opacity: 1,
+          x: 0,
           duration: 1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".cl-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
-        {
-          clipPath: "inset(0% 0 0 0)",
-          y: 0,
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".cl-heading", start: "top 85%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".cl-text",
-        { opacity: 0, y: 30, filter: "blur(4px)" },
-        {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 0.9,
-          stagger: 0.1,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".cl-text", start: "top 85%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".cl-feature",
-        { clipPath: "inset(0 100% 0 0)", opacity: 0 },
-        {
-          clipPath: "inset(0 0% 0 0)",
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".cl-features", start: "top 80%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".cl-progress",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
+          ease: "expo.out",
           scrollTrigger: {
-            trigger: ".cl-features",
+            trigger: sectionRef.current,
             start: "top 75%",
-            end: "bottom 50%",
-            scrub: 0.5,
+            toggleActions: "play none none none",
           },
         }
       );
 
+      // Right column: feature items stagger
+      gsap.fromTo(
+        ".cl-feature",
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".cl-features",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Terminal window reveal
       gsap.fromTo(
         ".cl-terminal",
-        { x: 80, opacity: 0, filter: "blur(10px)" },
+        { opacity: 0, scale: 0.96, y: 30 },
         {
-          x: 0,
           opacity: 1,
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".cl-terminal", start: "top 80%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".terminal-stat",
-        { scale: 0, opacity: 0 },
-        {
           scale: 1,
-          opacity: 1,
-          duration: 0.7,
-          ease: "back.out(2)",
-          scrollTrigger: { trigger: ".cl-terminal", start: "top 60%" },
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".cl-terminal",
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
         }
       );
+    }, sectionRef);
 
-      gsap.to(".cl-left", {
-        yPercent: -5,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.8,
-        },
-      });
-
-      gsap.to(".cl-right", {
-        yPercent: 5,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.8,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
-      ref={sectionRef}
       id="crisislab"
-      className="relative py-36 md:py-44 px-6 overflow-hidden"
+      ref={sectionRef}
+      className="section-padding relative overflow-hidden"
     >
-      {/* Background mesh orb */}
+      {/* Background accent glow */}
       <div
-        className="mesh-orb mesh-orb-primary"
-        style={{ width: "600px", height: "600px", top: "30%", right: "-5%" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          width: 800,
+          height: 800,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,229,160,0.04) 0%, transparent 60%)",
+          filter: "blur(60px)",
+        }}
       />
 
-      <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-start">
-          {/* Left: info */}
-          <div className="cl-left">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="cl-line h-px w-14 bg-accent/40 origin-left" />
-              <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase">
-                Produto
-              </span>
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 mb-16">
+          {/* Left: product intro */}
+          <div className="cl-left opacity-0">
+            <div className="eyebrow mb-6">
+              <span className="eyebrow-dot" />
+              <span>Produto</span>
             </div>
-
-            <h2 className="cl-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.08] tracking-[-0.03em]">
-              <span className="gradient-text text-glow">CrisisLab</span>
+            <h2
+              className="font-bold tracking-[-0.03em] leading-[1.08] mb-6"
+              style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
+            >
+              CrisisLab
             </h2>
-
-            <p className="cl-text text-xl text-muted mb-4 leading-relaxed">
-              Simulações de crise cibernética conduzidas por
-              facilitador.
+            <p className="text-lg text-muted/60 leading-relaxed mb-8 max-w-md">
+              Exercícios de simulação de crise cibernética que expõem gaps
+              reais na sua prontidão — antes que um incidente real faça isso.
             </p>
-
-            <p className="cl-text text-muted/70 mb-14 leading-relaxed">
-              Testamos a resposta do seu time antes que um incidente real o
-              faça. Cenários realistas, pressão controlada,
-              resultados mensuráveis. Seu CISO recebe um relatório que
-              o board entende.
-            </p>
-
-            {/* Feature list */}
-            <div className="cl-features relative">
-              <div className="absolute left-[7px] top-0 bottom-0 w-px bg-border/50">
-                <div className="cl-progress w-full h-full bg-accent origin-top" />
-              </div>
-
-              <div className="space-y-8">
-                {features.map((feat) => (
-                  <div
-                    key={feat.label}
-                    className="cl-feature flex gap-6 items-start"
-                  >
-                    <div
-                      className="w-[15px] h-[15px] rounded-full border-2 border-accent bg-background flex-shrink-0 mt-1"
-                      style={{
-                        boxShadow: "0 0 8px rgba(0,229,160,0.15)",
-                      }}
-                    />
-                    <div>
-                      <span className="text-[10px] font-mono text-accent/70 tracking-[0.2em] uppercase block mb-1.5">
-                        {feat.label}
-                      </span>
-                      <p className="text-sm text-muted/70 leading-relaxed">
-                        {feat.value}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <a href="#contato" className="btn-primary inline-flex">
+              <span>Agendar simulação</span>
+              <span className="btn-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 13L13 1M13 1H4M13 1V10" />
+                </svg>
+              </span>
+            </a>
           </div>
 
-          {/* Right: terminal */}
-          <div className="cl-right cl-terminal">
-            <TerminalTyping />
+          {/* Right: feature list */}
+          <div className="cl-features flex flex-col gap-6">
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="cl-feature group flex gap-5 p-5 rounded-xl border border-border/40 bg-surface/30 hover:border-accent/15 hover:bg-surface-elevated/50 transition-all duration-500 opacity-0"
+              >
+                <div className="flex-shrink-0 mt-1">
+                  <div className="w-2 h-2 rounded-full bg-accent/60 group-hover:bg-accent transition-colors duration-300" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold tracking-[-0.01em] text-foreground/85 mb-1">
+                    {f.label}
+                  </h4>
+                  <p className="text-sm text-muted/55 leading-relaxed">
+                    {f.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Terminal mockup */}
+        <div className="cl-terminal rounded-2xl border border-border/50 bg-surface/80 overflow-hidden glow-border opacity-0">
+          {/* Title bar */}
+          <div className="flex items-center gap-2 px-5 py-3 border-b border-border/30">
+            <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+            </div>
+            <span className="text-[10px] font-mono text-muted/40 ml-3">
+              crisislab — simulação ativa
+            </span>
+          </div>
+          {/* Terminal body */}
+          <div className="p-6 md:p-8 font-mono text-xs md:text-sm leading-relaxed">
+            <p className="text-muted/40 mb-2">
+              <span className="text-accent/60">$</span> crisislab init
+              --cenario ransomware-financeiro
+            </p>
+            <p className="text-muted/30 mb-4">
+              Inicializando ambiente de simulação...
+            </p>
+            <p className="text-muted/40 mb-1">
+              <span className="text-accent/70">[14:32:07]</span> Cenário
+              carregado: <span className="text-foreground/70">Ransomware — Instituição Financeira</span>
+            </p>
+            <p className="text-muted/40 mb-1">
+              <span className="text-accent/70">[14:32:08]</span> Stakeholders:{" "}
+              <span className="text-foreground/70">
+                CISO, Jurídico, Comunicação, Board
+              </span>
+            </p>
+            <p className="text-muted/40 mb-1">
+              <span className="text-accent/70">[14:32:08]</span> Duração:{" "}
+              <span className="text-foreground/70">90 minutos</span>
+            </p>
+            <p className="text-muted/40 mt-4">
+              <span className="text-accent/60">$</span> Pronto para iniciar.{" "}
+              <span className="inline-block w-2 h-4 bg-accent/50 ml-0.5 animate-pulse" />
+            </p>
           </div>
         </div>
       </div>

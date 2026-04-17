@@ -1,387 +1,162 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface FormData {
-  nome: string;
-  empresa: string;
-  email: string;
-  mensagem: string;
-}
-
-interface FormErrors {
-  nome?: string;
-  empresa?: string;
-  email?: string;
-  mensagem?: string;
-}
-
-type FormStatus = "idle" | "submitting" | "success" | "error";
-
-const inputClasses = (hasError: boolean) =>
-  `w-full px-5 py-3.5 bg-background border text-sm text-foreground placeholder:text-muted/30 focus:outline-none ${
-    hasError
-      ? "border-red-500/50 focus:border-red-500/70"
-      : "border-border/60 focus:border-accent/40 focus:shadow-[0_0_25px_rgba(0,229,160,0.08)]"
-  }` +
-  " rounded-xl" +
-  " transition-all duration-500";
-
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-  const btnRef = useRef<HTMLButtonElement>(null);
 
-  const [formData, setFormData] = useState<FormData>({
-    nome: "",
-    empresa: "",
-    email: "",
-    mensagem: "",
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [status, setStatus] = useState<FormStatus>("idle");
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    },
-    []
-  );
-
-  const validate = useCallback((): FormErrors => {
-    const errs: FormErrors = {};
-    if (!formData.nome.trim()) errs.nome = "Nome é obrigatório";
-    if (!formData.empresa.trim()) errs.empresa = "Empresa é obrigatória";
-    if (!formData.email.trim()) {
-      errs.email = "E-mail é obrigatório";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = "E-mail inválido";
-    }
-    if (!formData.mensagem.trim()) errs.mensagem = "Mensagem é obrigatória";
-    return errs;
-  }, [formData]);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const errs = validate();
-      if (Object.keys(errs).length > 0) {
-        setErrors(errs);
-        if (formRef.current) {
-          gsap.fromTo(
-            formRef.current,
-            { x: -8 },
-            { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }
-          );
-        }
-        return;
-      }
-
-      setStatus("submitting");
-
-      const subject = encodeURIComponent(
-        `Contato Nullscience — ${formData.empresa}`
-      );
-      const body = encodeURIComponent(
-        `Nome: ${formData.nome}\nEmpresa: ${formData.empresa}\nE-mail: ${formData.email}\n\nMensagem:\n${formData.mensagem}`
-      );
-
-      await new Promise((r) => setTimeout(r, 800));
-      window.location.href = `mailto:contato@nullscience.ai?subject=${subject}&body=${body}`;
-      setStatus("success");
-
-      if (btnRef.current) {
-        gsap.fromTo(
-          btnRef.current,
-          { scale: 0.95 },
-          { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" }
-        );
-      }
-
-      setTimeout(() => {
-        setStatus("idle");
-        setFormData({ nome: "", empresa: "", email: "", mensagem: "" });
-      }, 3000);
-    },
-    [formData, validate]
-  );
-
-  const handleBtnMove = useCallback((e: React.MouseEvent) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const btn = btnRef.current;
-    if (!btn) return;
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    gsap.to(btn, {
-      x: x * 0.12,
-      y: y * 0.12,
-      duration: 0.4,
-      ease: "power2.out",
-    });
-  }, []);
-
-  const handleBtnLeave = useCallback(() => {
-    gsap.to(btnRef.current, {
-      x: 0,
-      y: 0,
-      duration: 0.6,
-      ease: "elastic.out(1, 0.3)",
-    });
-  }, []);
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+  useEffect(() => {
+    const ctx = gsap.context(() => {
       gsap.fromTo(
-        ".contact-tag",
-        { opacity: 0, scale: 0.9, y: 20, filter: "blur(4px)" },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 0.7,
-          ease: "back.out(1.7)",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".contact-heading",
-        { clipPath: "inset(100% 0 0 0)", y: 50, filter: "blur(4px)" },
-        {
-          clipPath: "inset(0% 0 0 0)",
-          y: 0,
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".contact-heading", start: "top 85%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".contact-desc",
-        { opacity: 0, y: 30, filter: "blur(6px)" },
+        ".contact-content",
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          filter: "blur(0px)",
-          duration: 0.9,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".contact-desc", start: "top 85%" },
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         }
       );
 
       gsap.fromTo(
         ".contact-form",
-        { opacity: 0, y: 70, clipPath: "inset(0 0 100% 0)", filter: "blur(10px)" },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          clipPath: "inset(0 0 0% 0)",
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".contact-form", start: "top 85%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".contact-alt",
-        { opacity: 0, y: 15 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: { trigger: ".contact-alt", start: "top 90%" },
-        }
-      );
-
-      gsap.fromTo(
-        ".contact-glow",
-        { scale: 0.5, opacity: 0.2 },
-        {
-          scale: 1.3,
-          opacity: 0.6,
-          ease: "none",
+          duration: 0.9,
+          delay: 0.2,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
+            trigger: ".contact-form",
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
         }
       );
-    },
-    { scope: sectionRef }
-  );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section ref={sectionRef} id="contato" className="relative py-36 md:py-44 px-6">
-      <div className="contact-glow mesh-orb mesh-orb-primary" style={{ width: "700px", height: "500px", bottom: "0", left: "50%", transform: "translateX(-50%)" }} />
+    <section
+      id="contato"
+      ref={sectionRef}
+      className="section-padding relative overflow-hidden"
+    >
+      {/* Subtle background glow */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,229,160,0.03) 0%, transparent 60%)",
+          filter: "blur(60px)",
+        }}
+      />
 
-      <div className="relative max-w-3xl mx-auto text-center">
-        <div className="contact-tag eyebrow-tag mb-10">
-          <span className="eyebrow-dot" />
-          <span>Vamos Conversar</span>
+      <div className="max-w-3xl mx-auto relative z-10">
+        {/* Heading */}
+        <div className="contact-content text-center mb-14 opacity-0">
+          <div className="eyebrow mb-6 justify-center">
+            <span className="eyebrow-dot" />
+            <span>Contato</span>
+          </div>
+          <h2
+            className="font-bold tracking-[-0.03em] leading-[1.08] mb-4"
+            style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}
+          >
+            Vamos conversar sobre{" "}
+            <span className="gradient-text">sua prontidão</span>
+          </h2>
+          <p className="text-muted/50 text-base max-w-md mx-auto leading-relaxed">
+            Conte-nos sobre sua organização e agendamos uma conversa inicial sem
+            compromisso.
+          </p>
         </div>
 
-        <h2 className="contact-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.08] tracking-[-0.03em]">
-          Pronto para testar a resiliência{" "}
-          <span className="gradient-text">do seu time?</span>
-        </h2>
-
-        <p className="contact-desc text-lg md:text-xl text-muted mb-14 leading-relaxed">
-          Sem formulários intermináveis. Conte-nos sobre seu contexto
-          e montamos uma proposta sob medida. Respondemos em até 24 horas.
-        </p>
-
-        {/* Double-bezel form container */}
-        <div className="contact-form">
-          <div className="bezel-outer-lg">
-            <div className="bezel-inner-lg p-8 md:p-12">
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="text-left">
-                    <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
-                      Nome
-                    </label>
-                    <input
-                      type="text"
-                      name="nome"
-                      value={formData.nome}
-                      onChange={handleChange}
-                      placeholder="Seu nome"
-                      className={inputClasses(!!errors.nome)}
-                      style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
-                    />
-                    {errors.nome && (
-                      <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.nome}</p>
-                    )}
-                  </div>
-
-                  <div className="text-left">
-                    <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
-                      Empresa
-                    </label>
-                    <input
-                      type="text"
-                      name="empresa"
-                      value={formData.empresa}
-                      onChange={handleChange}
-                      placeholder="Sua empresa"
-                      className={inputClasses(!!errors.empresa)}
-                      style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
-                    />
-                    {errors.empresa && (
-                      <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.empresa}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="text-left">
-                  <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
-                    E-mail
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="seu@email.com"
-                    className={inputClasses(!!errors.email)}
-                    style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
-                  />
-                  {errors.email && (
-                    <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.email}</p>
-                  )}
-                </div>
-
-                <div className="text-left">
-                  <label className="text-[10px] font-mono text-muted/60 tracking-[0.2em] uppercase block mb-2.5">
-                    Mensagem
-                  </label>
-                  <textarea
-                    name="mensagem"
-                    rows={5}
-                    value={formData.mensagem}
-                    onChange={handleChange}
-                    placeholder="Conte-nos sobre seu cenário e objetivos..."
-                    className={inputClasses(!!errors.mensagem) + " resize-none"}
-                    style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
-                  />
-                  {errors.mensagem && (
-                    <p className="text-[11px] text-red-400/80 mt-1.5 font-mono">{errors.mensagem}</p>
-                  )}
-                </div>
-
-                {/* Submit — full-width pill with magnetic hover */}
-                <button
-                  ref={btnRef}
-                  type="submit"
-                  disabled={status === "submitting"}
-                  onMouseMove={handleBtnMove}
-                  onMouseLeave={handleBtnLeave}
-                  className={`w-full py-4 font-semibold rounded-full text-sm tracking-wide ${
-                    status === "success"
-                      ? "bg-accent text-background glow-lg"
-                      : status === "submitting"
-                      ? "bg-accent/60 text-background cursor-wait"
-                      : "bg-accent text-background hover:shadow-[0_0_40px_rgba(0,229,160,0.25)] active:scale-[0.98]"
-                  }`}
-                  style={{
-                    transition: "all 500ms cubic-bezier(0.32, 0.72, 0, 1)",
-                  }}
-                >
-                  {status === "submitting" && (
-                    <span className="inline-flex items-center gap-2">
-                      <svg
-                        className="animate-spin w-4 h-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                          strokeDasharray="31.4 31.4"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      Enviando...
-                    </span>
-                  )}
-                  {status === "success" && "Mensagem Enviada!"}
-                  {status === "idle" && "Enviar Mensagem"}
-                  {status === "error" && "Tentar Novamente"}
-                </button>
-              </form>
+        {/* Form */}
+        <form
+          className="contact-form space-y-5 opacity-0"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-[11px] font-mono text-muted/40 uppercase tracking-wider mb-2">
+                Nome
+              </label>
+              <input
+                type="text"
+                placeholder="Seu nome"
+                className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-mono text-muted/40 uppercase tracking-wider mb-2">
+                E-mail corporativo
+              </label>
+              <input
+                type="email"
+                placeholder="nome@empresa.com"
+                className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-all duration-300"
+              />
             </div>
           </div>
-        </div>
 
-        <p className="contact-alt mt-10 text-sm text-muted/50">
-          Prefere e-mail direto?{" "}
-          <a
-            href="mailto:contato@nullscience.ai"
-            className="text-accent/80 hover:text-accent hover:underline"
-            style={{ transition: "all 400ms cubic-bezier(0.32, 0.72, 0, 1)" }}
-          >
-            contato@nullscience.ai
-          </a>
-        </p>
+          <div>
+            <label className="block text-[11px] font-mono text-muted/40 uppercase tracking-wider mb-2">
+              Empresa
+            </label>
+            <input
+              type="text"
+              placeholder="Nome da empresa"
+              className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-all duration-300"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-mono text-muted/40 uppercase tracking-wider mb-2">
+              Como podemos ajudar?
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Descreva brevemente o que você busca..."
+              className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-all duration-300 resize-none"
+            />
+          </div>
+
+          <div className="pt-2">
+            <button type="submit" className="btn-primary">
+              <span>Enviar mensagem</span>
+              <span className="btn-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 13L13 1M13 1H4M13 1V10" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );

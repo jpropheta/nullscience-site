@@ -1,110 +1,87 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger);
-
 export default function Footer() {
-  const footerRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      gsap.fromTo(
-        footerRef.current,
-        { yPercent: 30, opacity: 0, filter: "blur(4px)" },
-        {
-          yPercent: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top bottom",
-            end: "top 70%",
-            scrub: 0.5,
-          },
-        }
-      );
-
-      gsap.to(".footer-gradient", {
-        backgroundPosition: "200% 50%",
-        ease: "none",
-        duration: 25,
-        repeat: -1,
-      });
-
-      gsap.fromTo(
-        ".footer-item",
-        { opacity: 0, y: 20, filter: "blur(4px)" },
-        {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          stagger: 0.1,
-          duration: 0.7,
-          ease: "cubic-bezier(0.32, 0.72, 0, 1)",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 85%",
-          },
-        }
-      );
-    },
-    { scope: footerRef }
-  );
-
   return (
-    <footer
-      ref={footerRef}
-      className="relative border-t border-border/40 py-14 px-6 overflow-hidden"
-    >
-      {/* Ambient gradient */}
-      <div
-        className="footer-gradient absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, #00e5a0, transparent, #00b8d4, transparent)",
-          backgroundSize: "200% 100%",
-        }}
-      />
-
-      <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Logo */}
-        <div className="footer-item flex items-center gap-2.5">
-          <div
-            className="w-6 h-6 rounded-md bg-accent/8 border border-accent/20 flex items-center justify-center"
-          >
-            <span className="text-accent font-mono font-bold text-[10px]">
-              N
-            </span>
+    <footer className="border-t border-border/30 bg-surface/30">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2 h-2 rounded-full bg-accent" />
+              <span className="text-sm font-semibold tracking-[-0.02em]">
+                nullscience
+              </span>
+            </div>
+            <p className="text-sm text-muted/50 leading-relaxed max-w-sm">
+              Traduzimos risco cibernético em estratégia executiva. Advisory,
+              simulações de crise e preparação para incidentes na América Latina.
+            </p>
           </div>
-          <span className="font-mono text-[10px] text-muted/60 tracking-[0.18em]">
-            NULLSCIENCE
-          </span>
+
+          {/* Nav */}
+          <div>
+            <h4 className="text-[10px] font-mono text-muted/40 uppercase tracking-[0.15em] mb-4">
+              Navegação
+            </h4>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Sobre", href: "#sobre" },
+                { label: "CrisisLab", href: "#crisislab" },
+                { label: "Método", href: "#metodo" },
+                { label: "Contato", href: "#contato" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-sm text-muted/50 hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-[10px] font-mono text-muted/40 uppercase tracking-[0.15em] mb-4">
+              Contato
+            </h4>
+            <ul className="space-y-2.5">
+              <li>
+                <span className="text-sm text-muted/50">
+                  contato@nullscience.ai
+                </span>
+              </li>
+              <li>
+                <span className="text-sm text-muted/50">
+                  São Paulo, Brasil
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* Copyright */}
-        <p className="footer-item text-[11px] text-muted/40 font-mono">
-          © {new Date().getFullYear()} Nullscience. Cybersecurity Advisory.
-          Brasil & LATAM.
-        </p>
-
-        {/* Email */}
-        <div className="footer-item flex items-center gap-6">
-          <a
-            href="mailto:contato@nullscience.ai"
-            className="text-[11px] text-muted/50 hover:text-accent font-mono"
-            style={{
-              transition: "color 400ms cubic-bezier(0.32, 0.72, 0, 1)",
-            }}
-          >
-            contato@nullscience.ai
-          </a>
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-[11px] text-muted/30 font-mono">
+            © {new Date().getFullYear()} Nullscience. Todos os direitos reservados.
+          </span>
+          <div className="flex items-center gap-6">
+            <a
+              href="#"
+              className="text-[11px] text-muted/30 hover:text-accent/60 transition-colors duration-300 font-mono"
+            >
+              Privacidade
+            </a>
+            <a
+              href="#"
+              className="text-[11px] text-muted/30 hover:text-accent/60 transition-colors duration-300 font-mono"
+            >
+              Termos
+            </a>
+          </div>
         </div>
       </div>
     </footer>
