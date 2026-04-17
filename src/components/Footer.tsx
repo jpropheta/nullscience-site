@@ -50,9 +50,12 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5">
               <li>
-                <span className="text-sm text-muted/50">
+                <a
+                  href="mailto:contato@nullscience.ai"
+                  className="text-sm text-muted/50 hover:text-accent/70 transition-colors duration-200"
+                >
                   contato@nullscience.ai
-                </span>
+                </a>
               </li>
               <li>
                 <span className="text-sm text-muted/50">

@@ -122,7 +122,7 @@ export default function Hero() {
       gsap.to(glow, {
         left: e.clientX,
         top: e.clientY,
-        duration: 1.5,
+        duration: 0.4,
         ease: "power3.out",
       });
     };

@@ -128,7 +128,7 @@ export default function WhyItMatters() {
           {stats.map((s, i) => (
             <div
               key={i}
-              className="wim-stat group p-7 rounded-2xl border border-border/40 bg-surface/40 hover:border-accent/15 transition-all duration-500 opacity-0"
+              className="wim-stat group p-7 rounded-2xl border border-border/40 bg-surface/40 hover:border-accent/15 transition-colors duration-150 opacity-0"
             >
               <div className="flex items-baseline gap-1 mb-4">
                 <span

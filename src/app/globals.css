@@ -70,7 +70,7 @@ body {
    GLOW EFFECTS
    ═══════════════════════════════════════════════════════ */
 .text-glow {
-  text-shadow: 0 0 80px rgba(0, 229, 160, 0.2), 0 0 160px rgba(0, 229, 160, 0.06);
+  filter: drop-shadow(0 0 24px rgba(0, 229, 160, 0.35));
 }
 
 .glow-border {
@@ -141,7 +141,7 @@ body {
   font-weight: 600;
   font-size: 0.875rem;
   letter-spacing: 0.01em;
-  transition: all 600ms var(--ease-spring);
+  transition: all 150ms var(--ease-spring);
   cursor: pointer;
   border: none;
 }
@@ -149,6 +149,10 @@ body {
 .btn-primary:hover {
   box-shadow: 0 0 40px rgba(0, 229, 160, 0.3), 0 0 80px rgba(0, 229, 160, 0.1);
   transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
 }
 
 .btn-primary .btn-icon {
@@ -159,7 +163,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 500ms var(--ease-spring);
+  transition: all 150ms var(--ease-spring);
 }
 
 .btn-primary:hover .btn-icon {
@@ -178,13 +182,17 @@ body {
   color: rgba(232, 232, 236, 0.75);
   font-size: 0.875rem;
   letter-spacing: 0.01em;
-  transition: all 500ms var(--ease-spring);
+  transition: all 150ms var(--ease-spring);
   cursor: pointer;
 }
 
 .btn-outline:hover {
   border-color: rgba(0, 229, 160, 0.35);
   color: var(--color-accent);
+}
+
+.btn-outline:active {
+  transform: scale(0.97);
 }
 
 /* ═══════════════════════════════════════════════════════

@@ -130,9 +130,9 @@ export default function About() {
           {services.map((s, i) => (
             <div
               key={i}
-              className="about-card group p-8 rounded-2xl border border-border/50 bg-surface/50 hover:bg-surface-elevated/80 hover:border-accent/15 transition-all duration-500 opacity-0"
+              className="about-card group p-8 rounded-2xl border border-border/50 bg-surface/50 hover:bg-surface-elevated/80 hover:border-accent/15 transition-colors duration-150 opacity-0"
             >
-              <div className="w-10 h-10 rounded-xl bg-accent/8 border border-accent/10 flex items-center justify-center text-accent mb-6 group-hover:bg-accent/15 transition-all duration-500">
+              <div className="w-10 h-10 rounded-xl bg-accent/8 border border-accent/10 flex items-center justify-center text-accent mb-6 group-hover:bg-accent/15 transition-colors duration-150">
                 {s.icon}
               </div>
               <h3 className="text-lg font-semibold tracking-[-0.02em] mb-3 text-foreground/90">

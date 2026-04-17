@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
           ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
           : "bg-transparent"
@@ -31,7 +31,7 @@ export default function Navbar() {
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group">
           <div className="w-2 h-2 rounded-full bg-accent" />
-          <span className="text-sm font-semibold tracking-[-0.02em] text-foreground/90 group-hover:text-accent transition-colors duration-300">
+          <span className="text-sm font-semibold tracking-[-0.02em] text-foreground/90 group-hover:text-accent transition-colors duration-150">
             nullscience
           </span>
         </a>
@@ -42,7 +42,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="text-xs font-mono text-muted tracking-[0.08em] uppercase hover:text-accent transition-colors duration-300"
+              className="text-xs font-mono text-muted tracking-[0.08em] uppercase hover:text-accent transition-colors duration-150"
             >
               {link.label}
             </a>
@@ -56,17 +56,17 @@ export default function Navbar() {
           aria-label="Menu"
         >
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-300 origin-center ${
+            className={`block w-full h-px bg-foreground/60 transition-all duration-150 origin-center ${
               menuOpen ? "rotate-45 translate-y-[9px]" : ""
             }`}
           />
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-300 ${
+            className={`block w-full h-px bg-foreground/60 transition-all duration-150 ${
               menuOpen ? "opacity-0 scale-x-0" : ""
             }`}
           />
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-300 origin-center ${
+            className={`block w-full h-px bg-foreground/60 transition-all duration-150 origin-center ${
               menuOpen ? "-rotate-45 -translate-y-[9px]" : ""
             }`}
           />
@@ -75,7 +75,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ${
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -85,7 +85,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="text-sm font-mono text-muted tracking-[0.06em] uppercase hover:text-accent transition-colors duration-300"
+              className="text-sm font-mono text-muted tracking-[0.06em] uppercase hover:text-accent transition-colors duration-150"
             >
               {link.label}
             </a>

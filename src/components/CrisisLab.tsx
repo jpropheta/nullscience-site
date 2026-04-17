@@ -149,10 +149,10 @@ export default function CrisisLab() {
             {features.map((f, i) => (
               <div
                 key={i}
-                className="cl-feature group flex gap-5 p-5 rounded-xl border border-border/40 bg-surface/30 hover:border-accent/15 hover:bg-surface-elevated/50 transition-all duration-500 opacity-0"
+                className="cl-feature group flex gap-5 p-5 rounded-xl border border-border/40 bg-surface/30 hover:border-accent/15 hover:bg-surface-elevated/50 transition-colors duration-150 opacity-0"
               >
                 <div className="flex-shrink-0 mt-1">
-                  <div className="w-2 h-2 rounded-full bg-accent/60 group-hover:bg-accent transition-colors duration-300" />
+                  <div className="w-2 h-2 rounded-full bg-accent/60 group-hover:bg-accent transition-colors duration-150" />
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold tracking-[-0.01em] text-foreground/85 mb-1">
