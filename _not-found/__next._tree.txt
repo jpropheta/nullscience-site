@@ -1,2 +1,2 @@
-:HL["/_next/static/chunks/04-c9gqez~.2d.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"V03z4o-xuKMZ_UaFXm6MW"}
+:HL["/nullscience-site/_next/static/chunks/04-c9gqez~.2d.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"_MjGZvaWzYuLFHk3OOXO4"}
