@@ -14,6 +14,7 @@ export default function Contact() {
   const [mensagem, setMensagem] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,19 +55,31 @@ export default function Contact() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Replace FORMSPREE_FORM_ID with the ID from https://formspree.io (free tier)
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/FORMSPREE_FORM_ID";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || !email) return;
     setSending(true);
-    const subject = encodeURIComponent(`Contato: ${nome}${empresa ? ` — ${empresa}` : ""}`);
-    const body = encodeURIComponent(
-      `Nome: ${nome}\nE-mail: ${email}${empresa ? `\nEmpresa: ${empresa}` : ""}\n\n${mensagem}`
-    );
-    window.location.href = `mailto:contato@nullscience.ai?subject=${subject}&body=${body}`;
-    setTimeout(() => {
+    setError("");
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ nome, email, empresa, mensagem }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError((data as { error?: string }).error ?? "Erro ao enviar. Tente novamente.");
+      }
+    } catch {
+      setError("Erro de rede. Verifique sua conexão e tente novamente.");
+    } finally {
       setSending(false);
-      setSubmitted(true);
-    }, 500);
+    }
   };
 
   return (
@@ -119,9 +132,9 @@ export default function Contact() {
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-foreground/80 mb-2">Mensagem preparada</h3>
+            <h3 className="text-lg font-semibold text-foreground/80 mb-2">Mensagem enviada</h3>
             <p className="text-sm text-muted/50 max-w-xs mx-auto">
-              Seu cliente de e-mail foi aberto com a mensagem preenchida. Basta enviar para finalizar o contato.
+              Recebemos seu contato e retornaremos em breve.
             </p>
           </div>
         ) : (
@@ -184,6 +197,10 @@ export default function Contact() {
                 className="w-full px-4 py-3 rounded-lg bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150 resize-none"
               />
             </div>
+
+            {error && (
+              <p className="text-sm text-red-400/80">{error}</p>
+            )}
 
             <div className="pt-2">
               <button

@@ -114,20 +114,32 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // Cursor glow — use transform for GPU compositing
+  // Cursor glow — throttled to one GSAP tween per animation frame
   useEffect(() => {
     const glow = glowRef.current;
     if (!glow) return;
+    let rafId: number | null = null;
+    let pendingX = 0;
+    let pendingY = 0;
     const onMove = (e: MouseEvent) => {
-      gsap.to(glow, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.4,
-        ease: "power3.out",
+      pendingX = e.clientX;
+      pendingY = e.clientY;
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        gsap.to(glow, {
+          x: pendingX,
+          y: pendingY,
+          duration: 0.4,
+          ease: "power3.out",
+        });
+        rafId = null;
       });
     };
     window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
