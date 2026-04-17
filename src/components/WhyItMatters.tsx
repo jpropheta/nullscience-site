@@ -41,7 +41,7 @@ export default function WhyItMatters() {
       // Heading
       gsap.fromTo(
         ".wim-heading",
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
@@ -60,7 +60,7 @@ export default function WhyItMatters() {
       statEls.forEach((el, i) => {
         gsap.fromTo(
           el,
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
             y: 0,
@@ -82,7 +82,7 @@ export default function WhyItMatters() {
           const obj = { val: 0 };
           gsap.to(obj, {
             val: target,
-            duration: 2,
+            duration: 1.5,
             delay: i * 0.1 + 0.3,
             ease: "power2.out",
             scrollTrigger: {
@@ -108,13 +108,13 @@ export default function WhyItMatters() {
   return (
     <section ref={sectionRef} className="section-padding relative">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-16">
+        <div className="mb-12">
           <div className="eyebrow mb-6">
             <span className="eyebrow-dot" />
             <span>Por que importa</span>
           </div>
           <h2
-            className="wim-heading font-bold tracking-[-0.03em] leading-[1.08] max-w-3xl opacity-0"
+            className="wim-heading font-semibold tracking-[-0.03em] leading-[1.08] max-w-3xl opacity-0"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
           >
             Os números não mentem.{" "}
@@ -128,16 +128,16 @@ export default function WhyItMatters() {
           {stats.map((s, i) => (
             <div
               key={i}
-              className="wim-stat group p-7 rounded-2xl border border-border/40 bg-surface/40 hover:border-accent/15 transition-colors duration-150 opacity-0"
+              className="wim-stat group p-6 rounded-2xl border border-border/40 bg-surface/40 hover:border-accent/15 transition-[border-color,background-color] duration-150 opacity-0"
             >
               <div className="flex items-baseline gap-1 mb-4">
                 <span
-                  className="wim-num text-4xl md:text-5xl font-bold tracking-[-0.04em] gradient-text"
+                  className="wim-num text-3xl md:text-4xl font-bold tracking-[-0.04em] gradient-text"
                   data-value={s.value}
                 >
                   0
                 </span>
-                <span className="text-lg font-semibold text-accent/70">
+                <span className="text-sm font-semibold text-accent/70">
                   {s.suffix}
                 </span>
               </div>

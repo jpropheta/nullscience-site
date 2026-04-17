@@ -21,13 +21,13 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-200 ${
         scrolled
           ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group">
           <div className="w-2 h-2 rounded-full bg-accent" />
@@ -37,7 +37,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {links.map((link) => (
             <a
               key={link.href}
@@ -56,17 +56,17 @@ export default function Navbar() {
           aria-label="Menu"
         >
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-150 origin-center ${
+            className={`block w-full h-px bg-foreground/60 transition-[transform,opacity] duration-200 ease-out origin-center ${
               menuOpen ? "rotate-45 translate-y-[9px]" : ""
             }`}
           />
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-150 ${
+            className={`block w-full h-px bg-foreground/60 transition-[transform,opacity] duration-200 ease-out ${
               menuOpen ? "opacity-0 scale-x-0" : ""
             }`}
           />
           <span
-            className={`block w-full h-px bg-foreground/60 transition-all duration-150 origin-center ${
+            className={`block w-full h-px bg-foreground/60 transition-[transform,opacity] duration-200 ease-out origin-center ${
               menuOpen ? "-rotate-45 -translate-y-[9px]" : ""
             }`}
           />
@@ -75,7 +75,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
+        className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
           menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
         }`}
       >

@@ -37,7 +37,7 @@ export default function HowItWorks() {
       // Heading
       gsap.fromTo(
         ".hiw-heading",
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
@@ -70,7 +70,7 @@ export default function HowItWorks() {
       // Steps stagger
       gsap.fromTo(
         ".hiw-step",
-        { opacity: 0, x: -30 },
+        { opacity: 0, x: -20 },
         {
           opacity: 1,
           x: 0,
@@ -92,13 +92,13 @@ export default function HowItWorks() {
   return (
     <section id="metodo" ref={sectionRef} className="section-padding relative">
       <div className="max-w-5xl mx-auto">
-        <div className="mb-20">
+        <div className="mb-14">
           <div className="eyebrow mb-6">
             <span className="eyebrow-dot" />
             <span>Método</span>
           </div>
           <h2
-            className="hiw-heading font-bold tracking-[-0.03em] leading-[1.08] max-w-2xl opacity-0"
+            className="hiw-heading font-semibold tracking-[-0.03em] leading-[1.08] max-w-2xl opacity-0"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
           >
             Quatro passos.{" "}
@@ -118,7 +118,7 @@ export default function HowItWorks() {
             }}
           />
 
-          <div className="flex flex-col gap-14">
+          <div className="flex flex-col gap-10 md:gap-12">
             {steps.map((s, i) => (
               <div
                 key={i}
@@ -134,11 +134,11 @@ export default function HowItWorks() {
                 </div>
 
                 {/* Content */}
-                <div className="pt-1 md:pt-2">
+                <div className="pt-2 md:pt-3">
                   <h3 className="text-xl md:text-2xl font-semibold tracking-[-0.02em] mb-3 text-foreground/90">
                     {s.title}
                   </h3>
-                  <p className="text-sm md:text-base text-muted/55 leading-relaxed max-w-lg">
+                  <p className="text-sm md:text-base text-muted/50 leading-relaxed max-w-lg">
                     {s.desc}
                   </p>
                 </div>

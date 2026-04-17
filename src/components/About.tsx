@@ -46,7 +46,7 @@ export default function About() {
       // Section heading reveal
       gsap.fromTo(
         ".about-heading",
-        { opacity: 0, y: 60, clipPath: "inset(100% 0 0 0)" },
+        { opacity: 0, y: 30, clipPath: "inset(100% 0 0 0)" },
         {
           opacity: 1,
           y: 0,
@@ -80,12 +80,12 @@ export default function About() {
       // Service cards stagger
       gsap.fromTo(
         ".about-card",
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          stagger: 0.15,
+          duration: 0.8,
+          stagger: 0.12,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".about-cards",
@@ -103,13 +103,13 @@ export default function About() {
     <section id="sobre" ref={sectionRef} className="section-padding relative">
       <div className="max-w-6xl mx-auto">
         {/* Eyebrow + heading */}
-        <div className="mb-20">
+        <div className="mb-14">
           <div className="eyebrow mb-6">
             <span className="eyebrow-dot" />
             <span>Quem somos</span>
           </div>
           <h2
-            className="about-heading font-bold tracking-[-0.03em] text-foreground/95 max-w-3xl leading-[1.08] opacity-0"
+            className="about-heading font-semibold tracking-[-0.03em] text-foreground/95 max-w-3xl leading-[1.08] opacity-0"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
           >
             Segurança cibernética não é só tecnologia.{" "}
@@ -121,18 +121,18 @@ export default function About() {
 
         {/* Separator */}
         <div
-          className="about-line h-px bg-gradient-to-r from-accent/30 via-accent/10 to-transparent mb-16 origin-left"
+          className="about-line h-px bg-gradient-to-r from-accent/30 via-accent/10 to-transparent mb-12 origin-left"
           style={{ transformOrigin: "left" }}
         />
 
         {/* Service cards */}
-        <div className="about-cards grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="about-cards grid grid-cols-1 md:grid-cols-3 gap-5">
           {services.map((s, i) => (
             <div
               key={i}
-              className="about-card group p-8 rounded-2xl border border-border/50 bg-surface/50 hover:bg-surface-elevated/80 hover:border-accent/15 transition-colors duration-150 opacity-0"
+              className="about-card group p-6 md:p-7 rounded-2xl border border-border/50 bg-surface/50 hover:bg-surface-elevated/80 hover:border-accent/15 transition-[border-color,background-color,transform] duration-150 hover:-translate-y-px opacity-0"
             >
-              <div className="w-10 h-10 rounded-xl bg-accent/8 border border-accent/10 flex items-center justify-center text-accent mb-6 group-hover:bg-accent/15 transition-colors duration-150">
+              <div className="w-10 h-10 rounded-xl bg-accent/8 border border-accent/10 flex items-center justify-center text-accent mb-5 group-hover:bg-accent/15 transition-colors duration-150">
                 {s.icon}
               </div>
               <h3 className="text-lg font-semibold tracking-[-0.02em] mb-3 text-foreground/90">

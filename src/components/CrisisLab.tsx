@@ -33,7 +33,7 @@ export default function CrisisLab() {
       // Left column: heading + description
       gsap.fromTo(
         ".cl-left",
-        { opacity: 0, x: -40 },
+        { opacity: 0, x: -24 },
         {
           opacity: 1,
           x: 0,
@@ -50,12 +50,12 @@ export default function CrisisLab() {
       // Right column: feature items stagger
       gsap.fromTo(
         ".cl-feature",
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.12,
+          duration: 0.7,
+          stagger: 0.1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".cl-features",
@@ -108,7 +108,7 @@ export default function CrisisLab() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Two-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-12">
           {/* Left: product intro */}
           <div className="cl-left opacity-0">
             <div className="eyebrow mb-6">
@@ -116,7 +116,7 @@ export default function CrisisLab() {
               <span>Produto</span>
             </div>
             <h2
-              className="font-bold tracking-[-0.03em] leading-[1.08] mb-6"
+              className="font-semibold tracking-[-0.03em] leading-[1.08] mb-6"
               style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
             >
               CrisisLab
@@ -145,11 +145,11 @@ export default function CrisisLab() {
           </div>
 
           {/* Right: feature list */}
-          <div className="cl-features flex flex-col gap-6">
+          <div className="cl-features flex flex-col gap-4">
             {features.map((f, i) => (
               <div
                 key={i}
-                className="cl-feature group flex gap-5 p-5 rounded-xl border border-border/40 bg-surface/30 hover:border-accent/15 hover:bg-surface-elevated/50 transition-colors duration-150 opacity-0"
+                className="cl-feature group flex gap-5 p-4 rounded-xl border border-border/40 bg-surface/30 hover:border-accent/15 hover:bg-surface-elevated/50 transition-[border-color,background-color] duration-150 opacity-0"
               >
                 <div className="flex-shrink-0 mt-1">
                   <div className="w-2 h-2 rounded-full bg-accent/60 group-hover:bg-accent transition-colors duration-150" />
@@ -170,7 +170,7 @@ export default function CrisisLab() {
         {/* Terminal mockup */}
         <div className="cl-terminal rounded-2xl border border-border/50 bg-surface/80 overflow-hidden glow-border opacity-0">
           {/* Title bar */}
-          <div className="flex items-center gap-2 px-5 py-3 border-b border-border/30">
+          <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border/30">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />

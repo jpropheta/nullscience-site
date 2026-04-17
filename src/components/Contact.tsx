@@ -19,11 +19,11 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".contact-content",
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          duration: 0.9,
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -35,12 +35,12 @@ export default function Contact() {
 
       gsap.fromTo(
         ".contact-form",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 16 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          delay: 0.2,
+          duration: 0.8,
+          delay: 0.1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".contact-form",
@@ -90,13 +90,13 @@ export default function Contact() {
 
       <div className="max-w-3xl mx-auto relative z-10">
         {/* Heading */}
-        <div className="contact-content text-center mb-14 opacity-0">
+        <div className="contact-content text-center mb-10 opacity-0">
           <div className="eyebrow mb-6 justify-center">
             <span className="eyebrow-dot" />
             <span>Contato</span>
           </div>
           <h2
-            className="font-bold tracking-[-0.03em] leading-[1.08] mb-4"
+            className="font-semibold tracking-[-0.03em] leading-[1.08] mb-4"
             style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}
           >
             Vamos conversar sobre{" "}
@@ -126,7 +126,7 @@ export default function Contact() {
           </div>
         ) : (
           <form
-            className="contact-form space-y-5 opacity-0"
+            className="contact-form space-y-4 opacity-0"
             onSubmit={handleSubmit}
             noValidate
           >
@@ -141,7 +141,7 @@ export default function Contact() {
                   required
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
+                  className="w-full px-4 py-3 rounded-lg bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
                 />
               </div>
               <div>
@@ -154,7 +154,7 @@ export default function Contact() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
+                  className="w-full px-4 py-3 rounded-lg bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function Contact() {
                 placeholder="Nome da empresa"
                 value={empresa}
                 onChange={(e) => setEmpresa(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
+                className="w-full px-4 py-3 rounded-lg bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150"
               />
             </div>
 
@@ -181,7 +181,7 @@ export default function Contact() {
                 placeholder="Descreva brevemente o que você busca..."
                 value={mensagem}
                 onChange={(e) => setMensagem(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150 resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-surface border border-border/50 text-sm text-foreground/80 placeholder:text-muted/30 focus:outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-[border-color,box-shadow] duration-150 resize-none"
               />
             </div>
 
