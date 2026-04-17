@@ -290,10 +290,10 @@ export default function Hero() {
   );
 
   /* Text content */
-  const headingLine1 = "A pr\u00f3xima crise";
-  const headingLine2 = "do seu time j\u00e1 est\u00e1";
+  const headingLine1 = "A próxima crise";
+  const headingLine2 = "do seu time já está";
   const headingHighlight = "escrita.";
-  const subtitle = "N\u00f3s ajudamos a reescrever o final.";
+  const subtitle = "Nós ajudamos a reescrever o final.";
 
   const renderChars = (text: string, className = "") =>
     text.split("").map((char, i) => (
@@ -302,7 +302,7 @@ export default function Hero() {
         className={`hero-char inline-block ${className}`}
         style={{ display: char === " " ? "inline" : "inline-block" }}
       >
-        {char === " " ? "\u00A0" : char}
+        {char === " " ? " " : char}
       </span>
     ));
 
@@ -375,8 +375,8 @@ export default function Hero() {
           <br />
           {renderChars(headingLine2 + " ")}
           <br className="sm:hidden" />
-          <span className="gradient-text text-glow">
-            {renderChars(headingHighlight)}
+          <span className="text-glow">
+            {renderChars(headingHighlight, "gradient-text")}
           </span>
         </h1>
 
@@ -391,15 +391,15 @@ export default function Hero() {
 
         {/* Description */}
         <p className="hero-desc text-base md:text-lg text-muted/50 max-w-lg mx-auto mb-16 leading-relaxed opacity-0">
-          Traduzimos risco cibern\u00e9tico em estrat\u00e9gia executiva.
-          Simula\u00e7\u00f5es de crise, advisory e prepara\u00e7\u00e3o real
+          Traduzimos risco cibernético em estratégia executiva.
+          Simulações de crise, advisory e preparação real
           para incidentes.
         </p>
 
         {/* CTA Buttons — button-in-button architecture */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
           <MagneticButton href="#crisislab" className="hero-cta btn-primary opacity-0 glow-md">
-            <span>Conhe\u00e7a o CrisisLab</span>
+            <span>Conheça o CrisisLab</span>
             <span className="btn-arrow">
               <svg
                 width="14"

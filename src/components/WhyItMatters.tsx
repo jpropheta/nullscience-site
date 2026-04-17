@@ -13,7 +13,7 @@ const stats = [
     numericValue: 6.75,
     suffix: "M",
     decimals: 2,
-    label: "Custo m\u00e9dio de um data breach no Brasil",
+    label: "Custo médio de um data breach no Brasil",
     source: "IBM, 2024",
   },
   {
@@ -29,7 +29,7 @@ const stats = [
     numericValue: 204,
     suffix: "",
     decimals: 0,
-    label: "dias em m\u00e9dia para identificar uma viola\u00e7\u00e3o",
+    label: "dias em média para identificar uma violação",
     source: "IBM, 2024",
   },
   {
@@ -37,13 +37,13 @@ const stats = [
     numericValue: 2,
     suffix: "x",
     decimals: 0,
-    label: "maior custo quando n\u00e3o h\u00e1 plano de resposta testado",
+    label: "maior custo quando não há plano de resposta testado",
     source: "Ponemon Institute",
   },
 ];
 
 const quoteWords =
-  "O plano de resposta a incidentes que nunca foi testado n\u00e3o \u00e9 um plano \u2014 \u00e9 uma esperan\u00e7a.".split(
+  "O plano de resposta a incidentes que nunca foi testado não é um plano — é uma esperança.".split(
     " "
   );
 
@@ -108,7 +108,7 @@ export default function WhyItMatters() {
         }
       );
 
-      /* Stat cards \u2014 double-bezel blur-up entrance with rotation */
+      /* Stat cards — double-bezel blur-up entrance with rotation */
       const statCards = gsap.utils.toArray<HTMLElement>(".wim-stat");
       statCards.forEach((card, i) => {
         gsap.fromTo(
@@ -175,7 +175,7 @@ export default function WhyItMatters() {
         });
       });
 
-      /* Quote \u2014 word-by-word dramatic reveal */
+      /* Quote — word-by-word dramatic reveal */
       const quoteWordEls = gsap.utils.toArray<HTMLElement>(".quote-word");
       gsap.fromTo(
         quoteWordEls,
@@ -218,18 +218,18 @@ export default function WhyItMatters() {
 
         {/* Heading */}
         <h2 className="wim-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 max-w-4xl leading-[1.08] tracking-[-0.03em]">
-          O custo de n\u00e3o estar{" "}
+          O custo de não estar{" "}
           <span className="gradient-text">preparado</span>
         </h2>
 
         {/* Description */}
         <p className="wim-desc text-lg md:text-xl text-muted max-w-2xl mb-20 leading-relaxed">
-          O cen\u00e1rio de amea\u00e7as no Brasil est\u00e1 entre os mais
-          agressivos do mundo. A diferen\u00e7a entre empresas que sobrevivem a
-          um incidente e as que n\u00e3o se recuperam? Prepara\u00e7\u00e3o.
+          O cenário de ameaças no Brasil está entre os mais
+          agressivos do mundo. A diferença entre empresas que sobrevivem a
+          um incidente e as que não se recuperam? Preparação.
         </p>
 
-        {/* Stats grid \u2014 double-bezel cards */}
+        {/* Stats grid — double-bezel cards */}
         <div
           className="wim-stats grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
           style={{ perspective: "1000px" }}
@@ -268,7 +268,7 @@ export default function WhyItMatters() {
           ))}
         </div>
 
-        {/* Pull quote \u2014 double-bezel */}
+        {/* Pull quote — double-bezel */}
         <div className="wim-quote mt-24 max-w-3xl mx-auto">
           <div className="bezel-outer-lg">
             <div className="bezel-inner-lg p-10 md:p-12 text-center">
@@ -283,7 +283,7 @@ export default function WhyItMatters() {
                 &rdquo;
               </p>
               <span className="text-xs text-muted/50 font-mono mt-6 block">
-                \u2014 Nullscience
+                — Nullscience
               </span>
             </div>
           </div>

@@ -57,14 +57,14 @@ export default function Contact() {
 
   const validate = useCallback((): FormErrors => {
     const errs: FormErrors = {};
-    if (!formData.nome.trim()) errs.nome = "Nome \u00e9 obrigat\u00f3rio";
-    if (!formData.empresa.trim()) errs.empresa = "Empresa \u00e9 obrigat\u00f3ria";
+    if (!formData.nome.trim()) errs.nome = "Nome é obrigatório";
+    if (!formData.empresa.trim()) errs.empresa = "Empresa é obrigatória";
     if (!formData.email.trim()) {
-      errs.email = "E-mail \u00e9 obrigat\u00f3rio";
+      errs.email = "E-mail é obrigatório";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = "E-mail inv\u00e1lido";
+      errs.email = "E-mail inválido";
     }
-    if (!formData.mensagem.trim()) errs.mensagem = "Mensagem \u00e9 obrigat\u00f3ria";
+    if (!formData.mensagem.trim()) errs.mensagem = "Mensagem é obrigatória";
     return errs;
   }, [formData]);
 
@@ -87,7 +87,7 @@ export default function Contact() {
       setStatus("submitting");
 
       const subject = encodeURIComponent(
-        `Contato Nullscience \u2014 ${formData.empresa}`
+        `Contato Nullscience — ${formData.empresa}`
       );
       const body = encodeURIComponent(
         `Nome: ${formData.nome}\nEmpresa: ${formData.empresa}\nE-mail: ${formData.email}\n\nMensagem:\n${formData.mensagem}`
@@ -237,13 +237,13 @@ export default function Contact() {
         </div>
 
         <h2 className="contact-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.08] tracking-[-0.03em]">
-          Pronto para testar a resili\u00eancia{" "}
+          Pronto para testar a resiliência{" "}
           <span className="gradient-text">do seu time?</span>
         </h2>
 
         <p className="contact-desc text-lg md:text-xl text-muted mb-14 leading-relaxed">
-          Sem formul\u00e1rios intermin\u00e1veis. Conte-nos sobre seu contexto
-          e montamos uma proposta sob medida. Respondemos em at\u00e9 24 horas.
+          Sem formulários intermináveis. Conte-nos sobre seu contexto
+          e montamos uma proposta sob medida. Respondemos em até 24 horas.
         </p>
 
         {/* Double-bezel form container */}
@@ -316,7 +316,7 @@ export default function Contact() {
                     rows={5}
                     value={formData.mensagem}
                     onChange={handleChange}
-                    placeholder="Conte-nos sobre seu cen\u00e1rio e objetivos..."
+                    placeholder="Conte-nos sobre seu cenário e objetivos..."
                     className={inputClasses(!!errors.mensagem) + " resize-none"}
                     style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
                   />
@@ -325,7 +325,7 @@ export default function Contact() {
                   )}
                 </div>
 
-                {/* Submit \u2014 full-width pill with magnetic hover */}
+                {/* Submit — full-width pill with magnetic hover */}
                 <button
                   ref={btnRef}
                   type="submit"

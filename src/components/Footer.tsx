@@ -90,7 +90,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <p className="footer-item text-[11px] text-muted/40 font-mono">
-          \u00a9 {new Date().getFullYear()} Nullscience. Cybersecurity Advisory.
+          © {new Date().getFullYear()} Nullscience. Cybersecurity Advisory.
           Brasil & LATAM.
         </p>
 

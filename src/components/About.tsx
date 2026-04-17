@@ -29,10 +29,10 @@ const capabilities = [
         />
       </svg>
     ),
-    title: "Advisory Estrat\u00e9gico",
+    title: "Advisory Estratégico",
     description:
-      "Assessoria em ciberseguran\u00e7a para C-level. Transformamos complexidade t\u00e9cnica em decis\u00f5es executivas claras.",
-    span: "md:col-span-2",
+      "Assessoria em cibersegurança para C-level. Transformamos complexidade técnica em decisões executivas claras.",
+    span: "lg:col-span-2",
   },
   {
     icon: (
@@ -56,9 +56,9 @@ const capabilities = [
         />
       </svg>
     ),
-    title: "Simula\u00e7\u00e3o de Crise",
+    title: "Simulação de Crise",
     description:
-      "Exerc\u00edcios imersivos de resposta a incidentes. Seu time pratica sob press\u00e3o antes que a press\u00e3o real chegue.",
+      "Exercícios imersivos de resposta a incidentes. Seu time pratica sob pressão antes que a pressão real chegue.",
     span: "",
   },
   {
@@ -86,9 +86,9 @@ const capabilities = [
         />
       </svg>
     ),
-    title: "Prepara\u00e7\u00e3o para Incidentes",
+    title: "Preparação para Incidentes",
     description:
-      "Playbooks, governance e processos de resposta. Da detec\u00e7\u00e3o ao board report, tudo documentado e testado.",
+      "Playbooks, governance e processos de resposta. Da detecção ao board report, tudo documentado e testado.",
     span: "",
   },
 ];
@@ -282,19 +282,19 @@ export default function About() {
 
         {/* Heading */}
         <h2 className="about-heading text-3xl md:text-5xl lg:text-6xl font-bold mb-8 max-w-4xl leading-[1.08] tracking-[-0.03em]">
-          Risco cibern\u00e9tico traduzido em{" "}
-          <span className="gradient-text">estrat\u00e9gia executiva</span>
+          Risco cibernético traduzido em{" "}
+          <span className="gradient-text">estratégia executiva</span>
         </h2>
 
         {/* Description */}
         <p className="about-desc text-lg md:text-xl text-muted max-w-2xl mb-24 leading-relaxed">
-          A Nullscience \u00e9 uma firma de advisory em ciberseguran\u00e7a
-          focada no Brasil e Am\u00e9rica Latina. N\u00e3o vendemos ferramentas
-          \u2014 preparamos organiza\u00e7\u00f5es para o que vem a seguir.
+          A Nullscience é uma firma de advisory em cibersegurança
+          focada no Brasil e América Latina. Não vendemos ferramentas
+          — preparamos organizações para o que vem a seguir.
         </p>
 
         {/* Asymmetric Bento Grid */}
-        <div className="about-cards grid md:grid-cols-3 gap-5">
+        <div className="about-cards grid lg:grid-cols-3 gap-5">
           {capabilities.map((cap) => (
             <TiltCard key={cap.title} className={cap.span}>
               <span className="mb-7 block opacity-80">{cap.icon}</span>

@@ -10,31 +10,31 @@ gsap.registerPlugin(ScrollTrigger);
 const steps = [
   {
     number: "01",
-    title: "Diagn\u00f3stico",
+    title: "Diagnóstico",
     description:
-      "Entendemos seu contexto: setor, maturidade de seguran\u00e7a, estrutura de resposta e objetivos do exerc\u00edcio.",
-    detail: "Reuni\u00e3o de scoping com CISO e equipe de seguran\u00e7a",
+      "Entendemos seu contexto: setor, maturidade de segurança, estrutura de resposta e objetivos do exercício.",
+    detail: "Reunião de scoping com CISO e equipe de segurança",
   },
   {
     number: "02",
-    title: "Design do Cen\u00e1rio",
+    title: "Design do Cenário",
     description:
-      "Criamos um cen\u00e1rio sob medida baseado em amea\u00e7as reais do seu setor. Nada gen\u00e9rico \u2014 tudo calibrado.",
-    detail: "Cen\u00e1rio customizado + briefing do facilitador",
+      "Criamos um cenário sob medida baseado em ameaças reais do seu setor. Nada genérico — tudo calibrado.",
+    detail: "Cenário customizado + briefing do facilitador",
   },
   {
     number: "03",
-    title: "Simula\u00e7\u00e3o",
+    title: "Simulação",
     description:
-      "Execu\u00e7\u00e3o facilitada com injects em tempo real. O time toma decis\u00f5es sob press\u00e3o, como seria em um incidente real.",
+      "Execução facilitada com injects em tempo real. O time toma decisões sob pressão, como seria em um incidente real.",
     detail: "Meia-dia ou dia inteiro, remoto ou presencial",
   },
   {
     number: "04",
-    title: "Debrief & Relat\u00f3rio",
+    title: "Debrief & Relatório",
     description:
-      "Scoring propriet\u00e1rio, gap analysis e relat\u00f3rio executivo. Recomenda\u00e7\u00f5es claras que v\u00e3o do SOC ao board.",
-    detail: "Relat\u00f3rio entregue em at\u00e9 5 dias \u00fateis",
+      "Scoring proprietário, gap analysis e relatório executivo. Recomendações claras que vão do SOC ao board.",
+    detail: "Relatório entregue em até 5 dias úteis",
   },
 ];
 
@@ -82,7 +82,7 @@ export default function HowItWorks() {
         }
       );
 
-      /* Progress line \u2014 fills on scroll with glow */
+      /* Progress line — fills on scroll with glow */
       gsap.fromTo(
         ".hiw-progress",
         { scaleY: 0 },
@@ -113,12 +113,12 @@ export default function HowItWorks() {
         }
       );
 
-      /* Step items \u2014 alternating slide with blur */
+      /* Step items — alternating slide with blur */
       const stepItems = gsap.utils.toArray<HTMLElement>(".hiw-step");
       stepItems.forEach((step, i) => {
         const fromLeft = i % 2 === 0;
 
-        /* Step number \u2014 spring scale in */
+        /* Step number — spring scale in */
         const numberEl = step.querySelector(".hiw-number");
         if (numberEl) {
           gsap.fromTo(
@@ -236,8 +236,8 @@ export default function HowItWorks() {
 
         {/* Description */}
         <p className="hiw-desc text-lg md:text-xl text-muted max-w-2xl mb-24 leading-relaxed">
-          Do diagn\u00f3stico ao relat\u00f3rio final \u2014 um processo
-          desenhado para gerar resultados concretos em semanas, n\u00e3o meses.
+          Do diagnóstico ao relatório final — um processo
+          desenhado para gerar resultados concretos em semanas, não meses.
         </p>
 
         {/* Timeline */}
@@ -257,7 +257,7 @@ export default function HowItWorks() {
                 key={step.number}
                 className="hiw-step flex gap-8 md:gap-12 items-start group relative"
               >
-                {/* Step number \u2014 double-bezel */}
+                {/* Step number — double-bezel */}
                 <div className="relative flex-shrink-0">
                   <div className="bezel-outer" style={{ borderRadius: "1rem", padding: "4px" }}>
                     <div

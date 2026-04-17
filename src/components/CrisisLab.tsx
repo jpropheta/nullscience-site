@@ -9,9 +9,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    label: "Cen\u00e1rio",
+    label: "Cenário",
     value:
-      "Ransomware, data breach, insider threat \u2014 cen\u00e1rios reais do mercado brasileiro.",
+      "Ransomware, data breach, insider threat — cenários reais do mercado brasileiro.",
   },
   {
     label: "Formato",
@@ -21,27 +21,27 @@ const features = [
   {
     label: "Plataforma",
     value:
-      "Browser-based, conduzido por facilitador especialista. Sem instala\u00e7\u00e3o.",
+      "Browser-based, conduzido por facilitador especialista. Sem instalação.",
   },
   {
     label: "Resultado",
     value:
-      "Scoring propriet\u00e1rio, relat\u00f3rio executivo e debrief com recomenda\u00e7\u00f5es acion\u00e1veis.",
+      "Scoring proprietário, relatório executivo e debrief com recomendações acionáveis.",
   },
 ];
 
 const terminalLines = [
   { prefix: "$", text: " crisislab init --scenario ransomware", type: "command" as const },
-  { prefix: "\u25b8", text: " Carregando cen\u00e1rio: Ataque ransomware ao setor financeiro", type: "output" as const },
-  { prefix: "\u25b8", text: " Participantes conectados: 12/12", type: "output" as const },
-  { prefix: "\u25b8", text: " Facilitador: ativo", type: "output" as const },
+  { prefix: "▸", text: " Carregando cenário: Ataque ransomware ao setor financeiro", type: "output" as const },
+  { prefix: "▸", text: " Participantes conectados: 12/12", type: "output" as const },
+  { prefix: "▸", text: " Facilitador: ativo", type: "output" as const },
   { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "\u26a1", text: " Fase 1: Detec\u00e7\u00e3o Inicial", type: "phase" as const },
-  { prefix: "", text: "08:00 \u2014 Alerta SIEM: atividade an\u00f4mala em servidor de arquivos", type: "log" as const },
-  { prefix: "", text: "08:03 \u2014 Ticket aberto: \u201carquivos inacess\u00edveis no departamento financeiro\u201d", type: "log" as const },
-  { prefix: "", text: "08:07 \u2014 Analista SOC: poss\u00edvel criptografia em massa detectada", type: "log" as const },
+  { prefix: "⚡", text: " Fase 1: Detecção Inicial", type: "phase" as const },
+  { prefix: "", text: "08:00 — Alerta SIEM: atividade anômala em servidor de arquivos", type: "log" as const },
+  { prefix: "", text: "08:03 — Ticket aberto: “arquivos inacessíveis no departamento financeiro”", type: "log" as const },
+  { prefix: "", text: "08:07 — Analista SOC: possível criptografia em massa detectada", type: "log" as const },
   { prefix: "---", text: "", type: "divider" as const },
-  { prefix: "\u25b8", text: " Aguardando decis\u00e3o do time...", type: "waiting" as const },
+  { prefix: "▸", text: " Aguardando decisão do time...", type: "waiting" as const },
 ];
 
 function TerminalTyping() {
@@ -129,7 +129,7 @@ function TerminalTyping() {
               <div className="w-3 h-3 rounded-full bg-green-500/50" />
             </div>
             <span className="ml-3 text-[11px] font-mono text-muted/50">
-              crisislab \u2014 simula\u00e7\u00e3o ativa
+              crisislab — simulação ativa
             </span>
           </div>
 
@@ -180,7 +180,7 @@ function TerminalTyping() {
                 return (
                   <div key={i} className="flex items-center gap-2">
                     <span className="text-accent">
-                      {isCurrentLine ? displayText.slice(0, 1) : "\u25b8"}
+                      {isCurrentLine ? displayText.slice(0, 1) : "▸"}
                     </span>
                     <span className="text-foreground/90">
                       {isCurrentLine ? displayText.slice(1) : line.text}
@@ -221,7 +221,7 @@ function TerminalTyping() {
         </div>
       </div>
 
-      {/* Floating stat \u2014 double-bezel */}
+      {/* Floating stat — double-bezel */}
       <div className="terminal-stat absolute -bottom-6 -left-4 md:-left-6">
         <div className="bezel-outer" style={{ borderRadius: "1rem", padding: "4px" }}>
           <div
@@ -230,7 +230,7 @@ function TerminalTyping() {
           >
             <div className="text-2xl font-bold gradient-text text-glow">94%</div>
             <div className="text-[10px] text-muted/60 font-mono mt-0.5">
-              satisfa\u00e7\u00e3o p\u00f3s-exerc\u00edcio
+              satisfação pós-exercício
             </div>
           </div>
         </div>
@@ -390,14 +390,14 @@ export default function CrisisLab() {
             </h2>
 
             <p className="cl-text text-xl text-muted mb-4 leading-relaxed">
-              Simula\u00e7\u00f5es de crise cibern\u00e9tica conduzidas por
+              Simulações de crise cibernética conduzidas por
               facilitador.
             </p>
 
             <p className="cl-text text-muted/70 mb-14 leading-relaxed">
               Testamos a resposta do seu time antes que um incidente real o
-              fa\u00e7a. Cen\u00e1rios realistas, press\u00e3o controlada,
-              resultados mensur\u00e1veis. Seu CISO recebe um relat\u00f3rio que
+              faça. Cenários realistas, pressão controlada,
+              resultados mensuráveis. Seu CISO recebe um relatório que
               o board entende.
             </p>
 
